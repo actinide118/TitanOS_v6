@@ -39,7 +39,7 @@
 
 
 static struct keymap keymap[] = {
-#include "keymap.my.c"
+#include "../keymap.my.c"
 };
 static int shift_mode = 0;
 static int alt_mode = 0;
