@@ -51,16 +51,16 @@ static void keyboard_interrupt_l2( uint8_t code )
 {
 	int direction;
 	int event;
-
-	if(code & 0x80) {
+	if(code > 0x80) {
 		direction = 0;
+		//print_string("h");
 		event = EVENT_KEY_UP;
 		code = code & 0x7f;
 	} else {
+		
 		direction = 1;
 		event = EVENT_KEY_DOWN;
 	}
-
 	struct keymap *k = &keymap[code];
 
     if(k->special == KEYMAP_SHIFT) {
@@ -75,7 +75,6 @@ static void keyboard_interrupt_l2( uint8_t code )
 		if(direction == 0) numlock_mode = !numlock_mode;
 	}
 	uint8_t keymap_flags = 0;
-
     // Assignation des bits selon les valeurs des variables
     keymap_flags |= (shift_mode ? MASK_SHIFT : 0);
     keymap_flags |= (alt_mode ? MASK_ALT : 0);
@@ -88,6 +87,7 @@ static void keyboard_interrupt_l2( uint8_t code )
 	if(shift_mode == 1 && k->normal == ASCII_BS){
 		reset();
 	}
+	//print_string(&k->normal);
 	if (direction == 1){
 		emit_keyboard(*k,keymap_flags);
 	}else{
@@ -101,6 +101,10 @@ static void keyboard_interrupt(registers_t *regs)
 {
 	uint8_t code = port_byte_in(KEYBOARD_PORT);
 	uint8_t c = KEY_INVALID;
+	char chaine[3] ;
+	//uint8_to_string(code, chaine);
+	//print_string(chaine);
+	//print_string(" ");
 
 	if(code == KEYCODE_EXTRA) {
 		expect_extra = 1;

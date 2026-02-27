@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "evt_queu.h"
+#include "../driver/vga.h"
 
 // Définition du type de fonction callback
 

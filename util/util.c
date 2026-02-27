@@ -179,6 +179,36 @@ void uint32_to_string(uint32_t num, char* buffer) {
 
     buffer[index] = '\0';  // Termine la chaîne par un caractère nul
 }
+
+void uint8_to_string(uint8_t num, char* buffer) {
+    int index = 0;
+    uint8_t temp = num;
+    char temp_buffer[3];  // Assez grand pour contenir un uint32_t et le caractère nul
+
+    // Gère le cas où le nombre est zéro
+    if (num == 0) {
+        buffer[index++] = '0';
+        buffer[index] = '\0';
+        return;
+    }
+
+    // Convertit chaque chiffre en commençant par la fin (remplissage de temp_buffer)
+    while (temp > 0) {
+        temp_buffer[index++] = (temp % 10) + '0';  // Prend le dernier chiffre et le convertit en caractère
+        temp /= 10;  // Réduit le nombre
+    }
+
+    // Ajoute le caractère nul de fin
+    temp_buffer[index] = '\0';
+
+    // Inverse temp_buffer pour mettre les chiffres dans le bon ordre dans buffer
+    for (int i = 0; i < index; i++) {
+        buffer[i] = temp_buffer[index - i - 1];
+    }
+
+    buffer[index] = '\0';  // Termine la chaîne par un caractère nul
+}
+
 void uint16_array_to_string(uint16_t* array, size_t length, char* result_buffer) {
     char* current_position = result_buffer;
 

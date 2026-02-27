@@ -23,7 +23,7 @@ start:
     mov dh, 0x00       ; Numéro de tête 0 (première tête)
     mov dl, [disk_number]      ; Périphérique 0 (disque)
     mov ah, 0x02       ; Fonction BIOS 0x02 : Lire des secteurs
-    mov al, 0x20     ; Nombre de secteurs à lire
+    mov al, 0x30     ; Nombre de secteurs à lire
     mov ch, 0x00       ; Cylindre 0
     mov cl, 0x02       ; Secteur 2 (le premier secteur est le bootloader)
     int 0x13           ; Appel du BIOS pour lire le secteur
