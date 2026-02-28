@@ -122,6 +122,40 @@ void execute_command(char* string[]){
 
         // Écrire un fichier
         fat32_write_file(0, buffer);
+    }else if(strcmp(string[0],"video")==0){
+        switch_to_13h();
+        M13h_clear_screen(0);
+        M13h_set_pixel(2,2,4);
+
+            uint8_t arr[80]={
+3, 3, 3, 3, 3, 3, 3, 3,
+    3, 3, 4, 4, 4, 4, 3, 3,
+    3, 3, 3, 3, 3, 3, 4, 3,
+    3, 3, 3, 3, 3, 3, 4, 3,
+    3, 3, 4, 4, 4, 3, 4, 3,
+    3, 4, 3, 3, 3, 4, 4, 3,
+    3, 4, 3, 3, 3, 4, 4, 3,
+    3, 3, 4, 4, 4, 3, 4, 3,
+    3,3,3,3,3,3,3,3,3,
+    3,3,3,3,3,3,3,3,3
+};
+    /*bool arr[48]={
+        true,false,false,true,false,true,
+        false,true,true,false,false,true,
+        true,false,false,false,false,false,
+        false,false,false,false,true,true,
+        true,true,false,false,false,false,
+        false,false,false,false,false,false,
+        false,false,false,false,false,false,
+        true,true,false,false,false,false,
+    };*/
+    //clear_screen(15);
+    /*if(ascii_a.minuscule[14]==false){
+        draw_rectangle(50,0,8,10,3);
+    }
+    put_binary_bitmap(15,10,8,10,3,4,ascii_a.minuscule);*/
+    M13h_put_color_bitmap(0,0,8,10,arr);
+
     }else{
         print_string("bad command");
     }

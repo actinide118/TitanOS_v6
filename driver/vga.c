@@ -182,3 +182,89 @@ void error_occured(char *string){
     }
     set_cursor((10*80+30+i)*2);
 }
+
+
+void switch_to_13h(void){
+    asm("cli");
+        port_byte_out(0x3C2,0b01100011);
+        port_word_out(0x03D4, 0x0E11);
+        port_word_out(0x03D4, 0x5F00);
+        port_word_out(0x03D4, 0x4F01);
+        port_word_out(0x03D4, 0x5002);
+        port_word_out(0x03D4, 0x5404);
+        port_word_out(0x03D4, 0x2813);
+        port_word_out(0x03D4, 0xBF06);
+        port_word_out(0x03D4, 0x1F07);
+        port_word_out(0x03D4, 0x4109);
+        port_word_out(0x03D4, 0x9C10);
+        port_word_out(0x03D4, 0x8E11);
+        port_word_out(0x03D4, 0x8F12);
+        port_word_out(0x03D4, 0x9615);
+        port_word_out(0x03D4, 0xB916);
+        port_word_out(0x03D4, 0x0008);
+        port_word_out(0x03D4, 0x4014);
+        port_word_out(0x03D4, 0xA317);
+        port_word_out(0x03C4, 0x0E04);
+        port_word_out(0x03C4, 0x0301);
+        port_word_out(0x03C4, 0x0f02);
+        port_word_out(0x03CE, 0x4005);
+        port_word_out(0x03CE, 0x0506);
+        port_byte_in(0x03DA);
+        port_byte_out(0x03C0, 0x30);
+        port_byte_out(0x03C0, 0x41);
+        port_byte_out(0x03C0, 0x33);
+        port_byte_out(0x03C0, 0x00);
+
+}
+
+void M13h_set_pixel(int x, int y, int color){
+    if(x < 0 || x>= VGA_WIDTH || y < 0 || y >=VGA_HEIGHT){
+        return;
+    }
+    uint8_t* vga_buffer = (uint8_t*)VGA256_ADDRESS;
+    int offset = (y * VGA_WIDTH) + x;
+    vga_buffer[offset]=(uint8_t)color;
+}
+
+void M13h_clear_screen(int color){
+    for(int i=0; i<VGA_HEIGHT;i++){
+        for(int j=0; j<VGA_WIDTH;j++){
+            M13h_set_pixel(j,i,color);
+        }
+    }
+}
+
+void M13h_put_binary_bitmap(int x_pos, int y_pos,int width, int height,int color1,int color2, bool arr[]){
+    for(int i=0;i<height;i++){
+        for(int j=0; j<width; j++){
+            if(arr[i*width+j]){
+                M13h_set_pixel(x_pos+j,y_pos+i,color1);
+            }else{
+                M13h_set_pixel(x_pos+j,y_pos+i,color2);
+            }
+        }
+    }
+}
+void M13h_put_color_bitmap(int x_pos, int y_pos,int width, int height, uint8_t arr[]){
+    for(int i=0;i<height;i++){
+        for(int j=0; j<width; j++){
+            M13h_set_pixel(x_pos+j,y_pos+i,arr[i*width+j]);
+            
+        }
+    }
+}
+void M13h_draw_rectangle(int x_pos, int y_pos, int width, int height, int color){
+    for(int i=0; i<height;i++){
+        for(int j=0; j<width;j++){
+            M13h_set_pixel(x_pos+j,y_pos+i,color);
+        }
+    }
+}
+void M13h_scroll(int nb_line,int bg_color){
+    memory_copy(
+            (uint8_t * )(VGA256_ADDRESS+nb_line*VGA_WIDTH),
+            (uint8_t * )(VGA256_ADDRESS),
+            VGA_WIDTH * (VGA_HEIGHT)
+    );
+    M13h_draw_rectangle(0,VGA_HEIGHT-nb_line,VGA_WIDTH,nb_line,bg_color);
+}

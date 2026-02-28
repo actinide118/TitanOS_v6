@@ -8,6 +8,11 @@
 #define VGA_OFFSET_HIGH 0x0e
 #define RED_ON_BLACK 0x04
 #define BLACK_ON_RED 0x40
+#define VGA256_ADDRESS 0xA0000
+#define VGA_WIDTH 320
+#define VGA_HEIGHT 200
+
+#include <stdint.h>
 
 void print_string(char *string);
 
@@ -32,3 +37,17 @@ void set_char_at_video_memory(char caracter, int offset);
 void cadre_de_couleur(int color);
 
 void set_char_colr_at_video_memory(char ch,int offset, int color);
+
+void switch_to_13h(void);
+
+void M13h_clear_screen(int color);
+
+void M13h_set_pixel(int x, int y, int color);
+
+void M13h_put_binary_bitmap(int x_pos, int y_pos,int width, int height,int color1,int color2, bool arr[]);
+
+void M13h_put_color_bitmap(int x_pos, int y_pos,int width, int height, uint8_t arr[]);
+
+void M13h_draw_rectangle(int x_pos, int y_pos, int width, int height, int color);
+
+void M13h_scroll(int nb_line,int bg_color);
