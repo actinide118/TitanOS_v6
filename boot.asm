@@ -17,18 +17,19 @@ start:
     call print_string
 
     ; Charger le noyau à partir du secteur 2 (secteur 1 est le bootloader)
-    mov bx, 0x1000     ; Charger le noyau à l'adresse 0x1000
+    mov bx, 0x7e00     ; Charger le noyau à l'adresse 0x1000
     mov ax, 0x0000
     mov es, ax
     mov dh, 0x00       ; Numéro de tête 0 (première tête)
     mov dl, [disk_number]      ; Périphérique 0 (disque)
     mov ah, 0x02       ; Fonction BIOS 0x02 : Lire des secteurs
-    mov al, 0x30     ; Nombre de secteurs à lire
+    mov al, 0x65    ; Nombre de secteurs à lire
     mov ch, 0x00       ; Cylindre 0
     mov cl, 0x02       ; Secteur 2 (le premier secteur est le bootloader)
     int 0x13           ; Appel du BIOS pour lire le secteur
     ; Vérifier si la lecture a échoué
     jc alert_error
+    
 
     mov ah, 0x0
     mov al, 0x3
@@ -77,14 +78,13 @@ _32bit_kernel_loader:
     mov fs, ax
     mov gs, ax
     mov ss, ax
-    
-    mov bp, 0x9000
+    mov bp, 0x7a00
     mov sp,bp
-    jmp dword 0x08:0x1000
+    jmp dword 0x08:0x7e00
 error_hang:
     jmp error_hang    
 
-message db 'Starting TitouanOS... please waiting for the kernel', 0
+message db 'Starting TitouanOS... please wait for the kernel', 0
 error_occured db 'Error loading kernel',0
 kernel_segment dw 0x1000, 0
 kernel_offset db 0x0000,0

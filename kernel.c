@@ -11,6 +11,8 @@
 #include "applis/move.h"
 #include "util/alea.h"
 #include "2DGRTOS/main.h"
+#include "./writing/supplier.h"
+#include "./util/stringmanipulation.h"
 
 uint32_t seed = 0;
 char *historique[200];
@@ -126,36 +128,18 @@ void execute_command(char* string[]){
         switch_to_13h();
         M13h_clear_screen(0);
         M13h_set_pixel(2,2,4);
-
-            uint8_t arr[80]={
-3, 3, 3, 3, 3, 3, 3, 3,
-    3, 3, 4, 4, 4, 4, 3, 3,
-    3, 3, 3, 3, 3, 3, 4, 3,
-    3, 3, 3, 3, 3, 3, 4, 3,
-    3, 3, 4, 4, 4, 3, 4, 3,
-    3, 4, 3, 3, 3, 4, 4, 3,
-    3, 4, 3, 3, 3, 4, 4, 3,
-    3, 3, 4, 4, 4, 3, 4, 3,
-    3,3,3,3,3,3,3,3,3,
-    3,3,3,3,3,3,3,3,3
-};
-    /*bool arr[48]={
-        true,false,false,true,false,true,
-        false,true,true,false,false,true,
-        true,false,false,false,false,false,
-        false,false,false,false,true,true,
-        true,true,false,false,false,false,
-        false,false,false,false,false,false,
-        false,false,false,false,false,false,
-        true,true,false,false,false,false,
-    };*/
-    //clear_screen(15);
-    /*if(ascii_a.minuscule[14]==false){
-        draw_rectangle(50,0,8,10,3);
-    }
-    put_binary_bitmap(15,10,8,10,3,4,ascii_a.minuscule);*/
-    M13h_put_color_bitmap(0,0,8,10,arr);
-
+        /*for(int i=0;i<255;i++){
+            for(int j=0;j<200; j++){
+        M13h_clear_screen(i);}
+        }*/
+        //M13h_put_binary_bitmap(0,0,get_character('a')->minuscule_width,10,7,0,get_character('a')->minuscule);
+        M13h_put_binary_bitmap(0,0,get_character('g')->graph_width,10,7,0,get_character('g')->graph);
+    }else if(strcmp(string[0],"touppercase")==0){
+        to_upper_case(string[1]);
+        print_string(string[1]);
+    }else if(strcmp(string[0],"tolowercase")==0){
+        to_lower_case(string[1]);
+        print_string(string[1]);
     }else{
         print_string("bad command");
     }
