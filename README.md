@@ -37,3 +37,7 @@ Affiche une "image" composée de deux éléments distint
 Ne marche pas.
 ### fat_format
 Inutile ( je ne suis même pas sur qu'il fonctionne )
+### touppercase
+Met en majuscule la chaine passée en argument
+### tolowercase
+Met en minuscule la chaine passée en argument
