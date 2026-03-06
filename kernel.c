@@ -127,13 +127,14 @@ void execute_command(char* string[]){
     }else if(strcmp(string[0],"video")==0){
         switch_to_13h();
         M13h_clear_screen(0);
-        M13h_set_pixel(2,2,4);
+        //M13h_set_pixel(2,2,4);
         /*for(int i=0;i<255;i++){
             for(int j=0;j<200; j++){
         M13h_clear_screen(i);}
         }*/
         //M13h_put_binary_bitmap(0,0,get_character('a')->minuscule_width,10,7,0,get_character('a')->minuscule);
-        M13h_put_binary_bitmap(0,0,get_character('g')->graph_width,10,7,0,get_character('g')->graph);
+        //M13h_put_binary_bitmap(0,0,get_character('g')->graph_width,10,7,0,get_character('g')->graph);
+        M13h_print_string("azertytuiopqsdfghjklmwxcvbnAAZERTYUIOOPQSDFGHJKLMWXCVBN0123456789");
     }else if(strcmp(string[0],"touppercase")==0){
         to_upper_case(string[1]);
         print_string(string[1]);

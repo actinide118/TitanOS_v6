@@ -2,6 +2,7 @@
 #include "vga.h"
 #include "ports.h"
 #include "../util/util.h"
+#include "../writing/supplier.h"
 
 
 void set_cursor(int offset) {
@@ -183,6 +184,28 @@ void error_occured(char *string){
     set_cursor((10*80+30+i)*2);
 }
 
+uint8_t foreground=7;
+uint8_t background=0;
+int current_row = 0 ;// *10 because a row is a character row which is 10 pixel height
+int current_col=0;
+
+uint8_t get_foreground(void){
+    return foreground;
+}
+
+uint8_t get_background(void){
+    return background;
+}
+
+void set_foreground(uint8_t color){
+    foreground=color;
+    return;
+}
+
+void set_background(uint8_t color){
+    background= color;
+    return;
+}
 
 void switch_to_13h(void){
     asm("cli");
@@ -267,4 +290,27 @@ void M13h_scroll(int nb_line,int bg_color){
             VGA_WIDTH * (VGA_HEIGHT)
     );
     M13h_draw_rectangle(0,VGA_HEIGHT-nb_line,VGA_WIDTH,nb_line,bg_color);
+}
+
+void M13h_put_char(char ascii_char){
+    struct character *graphic_char=get_character(ascii_char);
+    if(current_col+graphic_char->graph_width > VGA_WIDTH){
+        if((current_row+1)*10 > VGA_HEIGHT){
+            M13h_scroll(10,background);
+        }else{
+            current_row++;
+        }
+        current_col=0;
+    }
+    M13h_put_binary_bitmap(current_col,current_row*10,graphic_char->graph_width,10,foreground,background,graphic_char->graph);
+    current_col+=graphic_char->graph_width;
+    return;
+}
+
+void M13h_print_string(char* str){
+    while(*str){
+        M13h_put_char(*str);
+        *str++;
+    }
+    return;
 }

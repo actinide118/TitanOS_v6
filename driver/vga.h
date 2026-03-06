@@ -38,6 +38,14 @@ void cadre_de_couleur(int color);
 
 void set_char_colr_at_video_memory(char ch,int offset, int color);
 
+uint8_t get_foreground(void);
+
+uint8_t get_background(void);
+
+void set_foreground(uint8_t color);
+
+void set_background(uint8_t color);
+
 void switch_to_13h(void);
 
 void M13h_clear_screen(int color);
@@ -51,3 +59,7 @@ void M13h_put_color_bitmap(int x_pos, int y_pos,int width, int height, uint8_t a
 void M13h_draw_rectangle(int x_pos, int y_pos, int width, int height, int color);
 
 void M13h_scroll(int nb_line,int bg_color);
+
+void M13h_put_char(char ascii_char);
+
+void M13h_print_string(char* string);
