@@ -1,10 +1,10 @@
 Pour le français rendez vous sur le fichier [README.md](README.md)
 # Dependencies
-You need "gcc","nasm" and "qemu" 
+You need `gcc`,`nasm` and `qemu`
 # Build
-After cloning the repository run the command "make build"
+After cloning the repository run the command `make build`
 # Running 
-Execute "make run" or "make all"
+Execute `make run` or `make all`
 # Result
 home screen:
 
