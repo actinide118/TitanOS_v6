@@ -41,3 +41,6 @@ Inutile ( je ne suis même pas sur qu'il fonctionne )
 Met en majuscule la chaine passée en argument
 ### tolowercase
 Met en minuscule la chaine passée en argument
+### video
+Change le mode d'affichage de la carte graphique de text 3h à graphic 256 color linear 13h et affiche les caractères alphanumériques du système en mode 13h.
+Notez que dans ce mode le terminal ne marche pas et pour retourner dans le mode "classique" la VM doit être redémarré
