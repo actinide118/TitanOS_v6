@@ -1,4 +1,4 @@
-Pour le français rendez vous sur le fichier README.MD
+Pour le français rendez vous sur le fichier [README.md](README.md)
 # Dependencies
 You need "gcc","nasm" and "qemu" 
 # Build
