@@ -6,6 +6,7 @@ CPU_OBJS := $(patsubst ./cpu/%.c, ./bin/%.o, $(wildcard ./cpu/*.c))
 APPLIS := $(patsubst ./applis/%.c, ./bin/%.o, $(wildcard ./applis/*.c))
 UTILS := $(patsubst ./util/%.c, ./bin/%.o, $(wildcard ./util/*.c))
 DRIVERS := $(patsubst ./driver/%.c, ./bin/%.o, $(wildcard ./driver/*.c))
+GUI := $(patsubst ./gui/%.c, ./bin/%.o, $(wildcard ./gui/*.c))
 
 ./bin/%.o: ./cpu/%.c
 	gcc -ffreestanding -m32 -fno-pie -fno-stack-protector -c $< -o $@
@@ -23,6 +24,9 @@ DRIVERS := $(patsubst ./driver/%.c, ./bin/%.o, $(wildcard ./driver/*.c))
 ./bin/%.o: ./util/%.c
 	gcc -ffreestanding -m32 -fno-pie -fno-stack-protector -c $< -o $@
 
+./bin/%.o: ./gui/%.c
+	gcc -ffreestanding -m32 -fno-pie -fno-stack-protector -c $< -o $@
+
 ./bin/Cloader.o: Cloader.asm
 	nasm Cloader.asm -f elf -o bin/Cloader.o
 
@@ -38,7 +42,7 @@ DRIVERS := $(patsubst ./driver/%.c, ./bin/%.o, $(wildcard ./driver/*.c))
 ./bin/supplier.o: ./writing/supplier.c
 	gcc -ffreestanding -m32 -fno-pie -fno-stack-protector -c $< -o $@
 
-./bin/kernel.bin: ./bin/Cloader.o ./bin/interrupt.o ./bin/evt.o ./bin/2GRTOS.o ./bin/kernel.o ./bin/supplier.o $(CPU_OBJS) $(APPLIS) $(UTILS) $(DRIVERS)
+./bin/kernel.bin: ./bin/Cloader.o ./bin/interrupt.o ./bin/evt.o ./bin/2GRTOS.o ./bin/kernel.o ./bin/supplier.o $(CPU_OBJS) $(APPLIS) $(UTILS) $(DRIVERS) $(GUI)
 	ld -o $@ -Ttext 0x8000 $^ --oformat binary -m elf_i386
 
 ./bin/boot.bin:

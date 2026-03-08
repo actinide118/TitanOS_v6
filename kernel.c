@@ -13,6 +13,7 @@
 #include "2DGRTOS/main.h"
 #include "./writing/supplier.h"
 #include "./util/stringmanipulation.h"
+#include "./gui/window.h"
 
 uint32_t seed = 0;
 char *historique[200];
@@ -48,7 +49,7 @@ void start_kernel (){
     M3h_print_string("(\\  /)\n \\\\//\n /..\\\n \\__/ ");
     M3h_print_string("\n> ");
 }
-void execute_command(char* string[]){
+bool execute_command(char* string[]){
     historique[pointeur_d_historique]=*string;
     pointeur_d_historique++;
     if(strcmp(string[0], "end")== 0){
@@ -58,7 +59,7 @@ void execute_command(char* string[]){
     }else if(strcmp(string[0], "clear")==0){
         if(Is_13h()){
             M13h_clear_screen(get_background());
-            return;
+            return false;
         }
         M3h_clear_screen();
         M3h_cadre_de_couleur(0x20);
@@ -102,14 +103,14 @@ void execute_command(char* string[]){
     }else if(strcmp(string[0],"logo")==0){
         if(Is_13h()){
             print_string("Isn t supported yet");
-            return;
+            return false;
         }
         M3h_print_string("(\\  /)\n \\\\//\n /..\\\n \\__/ \n");
         M3h_print_string(" __________    __  __________    ____       ____      __  _______   _______\n|___   ____|  /_/ |____   ___|  / _  |     /    |    / / |   __  | |  _____|\n   /  /      __       /  /     / /_\\ |    /  /| |   / /  |  |  | | |  |_____\n  /  /      /  /     /  /     / ____ |   /  / | |  / /   |  |  | | |______  |\n /  /      /  /     /  /     / /   | |  /  /  | | / /    |  |__| |    ____| |\n/  /      /  /     /  /     / /    | | /  /   | |/ /     |_______| |________|\n");
     }else if(strcmp(string[0],"game")==0){
         if(Is_13h()){
             print_string("Doesn t work in video mode");
-            return;
+            return false;
         }
         init_game();
     }else if(strcmp(string[0],"random")==0){
@@ -123,7 +124,7 @@ void execute_command(char* string[]){
     }else if(strcmp(string[0],"2Dtest")==0){
         if(Is_13h()){
             print_string("Doesn t work in video mode");
-            return;
+            return false;
         }
         M3h_clear_screen();
         renderer();
@@ -143,7 +144,7 @@ void execute_command(char* string[]){
     }else if(strcmp(string[0],"video")==0){
         if(Is_13h()){
             print_string("already in video mode");
-            return;
+            return false;
         }
         switch_to_13h();
         M13h_clear_screen(0);
@@ -154,6 +155,25 @@ void execute_command(char* string[]){
     }else if(strcmp(string[0],"tolowercase")==0){
         to_lower_case(string[1]);
         print_string(string[1]);
+    }else if(strcmp(string[0],"fenetre")==0){
+        if(!Is_13h()){
+            print_string("only work in graphic mode");
+            return false;}
+        struct window mywindow={
+            .usable_height=180,
+            .usable_width=300,
+            .color_border=0x3,
+            .color_title=0x7,
+            .color_intern=15,
+            .color_foreground=0x7,
+            .title="hj",
+        };
+        if(!create_window(&mywindow)){
+            print_string("failed");
+        }else{
+            return true;
+        }
+        
     }else{
         print_string("bad command");
     }

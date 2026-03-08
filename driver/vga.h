@@ -48,6 +48,14 @@ void set_foreground(uint8_t color);
 
 void set_background(uint8_t color);
 
+uint16_t get_row(void);
+
+void set_row(uint16_t row);
+
+uint16_t get_col(void);
+
+void set_col(uint16_t col);
+
 void switch_to_13h(void);
 
 void M13h_clear_screen(int color);

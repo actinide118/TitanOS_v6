@@ -143,9 +143,11 @@ void keycallback(struct keymap ch, uint8_t flag){
         print_nl();
         char* result[10];
         int count = split(key_buffer, ' ', result, 10);
-        execute_command(result);
+        bool disable = execute_command(result);
         key_buffer[0] = '\0';
-        print_string("\n> ");
+		if(!disable){
+        	print_string("\n> ");
+		}
     }else if(ch.special == KEYMAP_ALPHA || ch.special == 0){
 		uint8_t shift = (flag & MASK_SHIFT) ? 1 : 0;
     	uint8_t alt = (flag & MASK_ALT) ? 1 : 0;
@@ -174,6 +176,12 @@ void keyup(struct keymap km, uint8_t arg2){
 void reset(){
 	set_callback_keyboard_up(keyup);
 	set_callback_keyboard(keycallback);
+	if(Is_13h()){
+		clear_screen(get_background());
+		M13h_print_string("\n> ");
+
+		return;
+	}
 	M3h_clear_screen();
     M3h_cadre_de_couleur(0x20);
     M3h_set_cursor((1*80+3)*2);

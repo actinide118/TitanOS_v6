@@ -186,8 +186,8 @@ void error_occured(char *string){
 
 uint8_t foreground=7;
 uint8_t background=0;
-int current_row = 0 ;// *10 because a row is a character row which is 10 pixel height
-int current_col=0;
+uint16_t current_row = 0 ;
+uint16_t current_col=0;
 bool is_13h=false;
 
 bool Is_13h(void){
@@ -209,6 +209,24 @@ void set_foreground(uint8_t color){
 
 void set_background(uint8_t color){
     background= color;
+    return;
+}
+
+uint16_t get_row(void){
+    return current_row;
+}
+
+uint16_t get_col(void){
+    return current_col;
+}
+
+void set_col(uint16_t col){
+    current_col=col;
+    return;
+}
+
+void set_row(uint16_t row){
+    current_row=row;
     return;
 }
 
@@ -303,24 +321,24 @@ void M13h_scroll(int nb_line,int bg_color){
 void M13h_put_char(char ascii_char){
     struct character *graphic_char=get_character(ascii_char);
     if(ascii_char=='\n'){
-        if((current_row+1)*10 >= VGA_HEIGHT){
+        if(current_row+10 >= VGA_HEIGHT){
             M13h_scroll(10,background);
         }else{
-            current_row++;
+            current_row+=10;
         }
         current_col=0;
         return;
     }
     if(current_col+graphic_char->graph_width > VGA_WIDTH){
-        if(((current_row+1)*10 >= VGA_HEIGHT)){
+        if((current_row+10 >= VGA_HEIGHT)){
             M13h_scroll(10,background);
         }else{
-            current_row++;
+            current_row+=10;
         }
         current_col=0;
     }
     
-    M13h_put_binary_bitmap(current_col,current_row*10,graphic_char->graph_width,10,foreground,background,graphic_char->graph);
+    M13h_put_binary_bitmap(current_col,current_row,graphic_char->graph_width,10,foreground,background,graphic_char->graph);
     current_col+=graphic_char->graph_width;
     return;
 }
