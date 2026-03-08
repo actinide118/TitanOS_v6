@@ -137,15 +137,15 @@ static char key_buffer[256];
 void keycallback(struct keymap ch, uint8_t flag){
     if (ch.normal == ASCII_BS) {
         if (backspace(key_buffer)) {
-            M3h_print_backspace();
+            print_backspace();
         }
     } else if (ch.normal == ASCII_CR) {
-        M3h_print_nl();
+        print_nl();
         char* result[10];
         int count = split(key_buffer, ' ', result, 10);
         execute_command(result);
         key_buffer[0] = '\0';
-        M3h_print_string("\n> ");
+        print_string("\n> ");
     }else if(ch.special == KEYMAP_ALPHA || ch.special == 0){
 		uint8_t shift = (flag & MASK_SHIFT) ? 1 : 0;
     	uint8_t alt = (flag & MASK_ALT) ? 1 : 0;
@@ -165,7 +165,7 @@ void keycallback(struct keymap ch, uint8_t flag){
 
         append(key_buffer, letter);
         char str[2] = {letter, '\0'};
-        M3h_print_string(str);
+        print_string(str);
     }
 }
 void keyup(struct keymap km, uint8_t arg2){

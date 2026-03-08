@@ -188,6 +188,11 @@ uint8_t foreground=7;
 uint8_t background=0;
 int current_row = 0 ;// *10 because a row is a character row which is 10 pixel height
 int current_col=0;
+bool is_13h=false;
+
+bool Is_13h(void){
+    return is_13h;
+}
 
 uint8_t get_foreground(void){
     return foreground;
@@ -237,6 +242,7 @@ void switch_to_13h(void){
         port_byte_out(0x03C0, 0x41);
         port_byte_out(0x03C0, 0x33);
         port_byte_out(0x03C0, 0x00);
+        is_13h=true;
 
 }
 
@@ -255,6 +261,8 @@ void M13h_clear_screen(int color){
             M13h_set_pixel(j,i,color);
         }
     }
+    current_row=0;
+    current_col=0;
 }
 
 void M13h_put_binary_bitmap(int x_pos, int y_pos,int width, int height,int color1,int color2, bool arr[]){
@@ -294,14 +302,24 @@ void M13h_scroll(int nb_line,int bg_color){
 
 void M13h_put_char(char ascii_char){
     struct character *graphic_char=get_character(ascii_char);
+    if(ascii_char=='\n'){
+        if((current_row+1)*10 >= VGA_HEIGHT){
+            M13h_scroll(10,background);
+        }else{
+            current_row++;
+        }
+        current_col=0;
+        return;
+    }
     if(current_col+graphic_char->graph_width > VGA_WIDTH){
-        if((current_row+1)*10 > VGA_HEIGHT){
+        if(((current_row+1)*10 >= VGA_HEIGHT)){
             M13h_scroll(10,background);
         }else{
             current_row++;
         }
         current_col=0;
     }
+    
     M13h_put_binary_bitmap(current_col,current_row*10,graphic_char->graph_width,10,foreground,background,graphic_char->graph);
     current_col+=graphic_char->graph_width;
     return;
@@ -313,4 +331,60 @@ void M13h_print_string(char* str){
         *str++;
     }
     return;
+}
+
+void M13h_print_nl(void){
+    M13h_put_char('\n');
+}
+
+void M13h_print_backspace(void){
+    if(current_col <8){
+        current_col = 0;
+    }else{
+        current_col -=8;
+    }
+    M13h_put_char('\0');
+    current_col -=8;
+}
+
+void print_string(char* str){
+    if(is_13h){
+        M13h_print_string(str);
+    }else{
+        M3h_print_string(str);
+    }
+}
+
+void clear_screen(uint8_t color){
+    if(is_13h){
+        M13h_clear_screen(color);
+    }else{
+        M3h_clear_screen();
+    }
+}
+
+void print_nl(void){
+    if(is_13h){
+        M13h_print_nl();
+    }else{
+        M3h_print_nl();
+    }
+}
+void text_scroll(void){
+    if(is_13h){
+        M13h_scroll(10,background);
+    }else{
+       int offset = M3h_get_cursor(); 
+       offset = M3h_scroll_ln(offset);
+       offset = M3h_move_offset_to_new_line(offset);
+       M3h_set_cursor(offset);
+    }
+}
+
+void print_backspace(void){
+    if(is_13h){
+        M13h_print_backspace();
+    }else{
+        M3h_print_backspace();
+    }
 }

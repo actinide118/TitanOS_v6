@@ -38,6 +38,8 @@ void M3h_cadre_de_couleur(int color);
 
 void M3h_set_char_colr_at_video_memory(char ch,int offset, int color);
 
+bool Is_13h(void);
+
 uint8_t get_foreground(void);
 
 uint8_t get_background(void);
@@ -63,3 +65,17 @@ void M13h_scroll(int nb_line,int bg_color);
 void M13h_put_char(char ascii_char);
 
 void M13h_print_string(char* string);
+
+void M13h_print_nl(void);
+
+void M13h_print_backspace(void);
+
+void print_string(char* str);
+
+void clear_screen(uint8_t color);
+
+void print_nl(void);
+
+void text_scroll(void);
+
+void print_backspace(void);

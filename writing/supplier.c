@@ -1,6 +1,6 @@
 #include "./supplier.h"
 
-struct character characters[63]={{
+struct character characters[65]={{
     .letter = 'a',
     .graph =    {
         false,false,false,false,false,false,
@@ -942,11 +942,41 @@ struct character characters[63]={{
         false,false,false,false,false,
     },
     .graph_width=5,
+},{
+    .letter='\0',
+    .graph={
+        false,false,false,false,false,false,false,false,
+        false,false,false,false,false,false,false,false,
+        false,false,false,false,false,false,false,false,
+        false,false,false,false,false,false,false,false,
+        false,false,false,false,false,false,false,false,
+        false,false,false,false,false,false,false,false,
+        false,false,false,false,false,false,false,false,
+        false,false,false,false,false,false,false,false,
+        false,false,false,false,false,false,false,false,
+        false,false,false,false,false,false,false,false,
+    },
+    .graph_width=8,
+},{
+    .letter='>',
+    .graph={
+        false,false,false,false,false,false,
+        false,true,false,false,false,false,
+        false,false,true,false,false,false,
+        false,false,false,true,false,false,
+        false,false,false,false,true,false,
+        false,false,false,true,false,false,
+        false,false,true,false,false,false,
+        false,true,false,false,false,false,
+        false,false,false,false,false,false,
+        false,false,false,false,false,false,
+    },
+    .graph_width=6
 }
 };
 
 struct character default_out={
-        .letter='\0',
+        .letter=255,
         .graph={
             false,false,false,false,false,false,false,false,
             false,false,false,false,false,false,false,false,
@@ -964,7 +994,7 @@ struct character default_out={
 
 character* get_character(char input){
     //character* characters = (character*) 0x5000;
-    for(int i=0; i<63; i++){
+    for(int i=0; i<65; i++){
         if(characters[i].letter == input){
             return &characters[i];
         }

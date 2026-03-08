@@ -52,17 +52,21 @@ void execute_command(char* string[]){
     historique[pointeur_d_historique]=*string;
     pointeur_d_historique++;
     if(strcmp(string[0], "end")== 0){
-        M3h_print_string("BYE");
+        print_string("BYE");
         port_byte_out(0x3C0, 0x00);
         asm volatile("hlt");
     }else if(strcmp(string[0], "clear")==0){
+        if(Is_13h()){
+            M13h_clear_screen(get_background());
+            return;
+        }
         M3h_clear_screen();
         M3h_cadre_de_couleur(0x20);
         M3h_set_cursor((1*80+3)*2);
         M3h_print_string_color("hello, TitanOS started",0x9F);
         M3h_set_cursor((2*80+3)*2);
     }else if(strcmp(string[0], "version")==0){
-        M3h_print_string("TitanOS v6");
+        print_string("TitanOS v6");
     }else if(strcmp(string[0], "read")==0){
         uint16_t buffer [256];
         uint32_t sector = string_to_uint32(string[1]);
@@ -72,14 +76,14 @@ void execute_command(char* string[]){
         char ascii_tick[12];
         uint32_t nb = get_tick();
         uint32_to_string(nb, ascii_tick);
-        M3h_print_string(ascii_tick);
+        print_string(ascii_tick);
     }else if(strcmp(string[0],"cat")==0){
         uint16_t buffer [256];
         uint32_t sector = string_to_uint32(string[1]);
         read_sector(sector, buffer);
         char resultat [256];
         uint16_array_to_string(buffer, 256,resultat);
-        M3h_print_string(resultat);
+        print_string(resultat);
     }else if(strcmp(string[0],"page")==0){/* Lesson 22: Code to test kmalloc, the rest is unchanged */
         u32 phys_addr;
         u32 page = kmalloc(1000, 1, &phys_addr);
@@ -87,18 +91,26 @@ void execute_command(char* string[]){
         int_to_ascii(page, page_str);
         char phys_str[16];
         int_to_ascii(phys_addr, phys_str);
-        M3h_print_string("Page: ");
-        M3h_print_string(page_str);
-        M3h_print_string(", physical address: ");
-        M3h_print_string(phys_str);
-        M3h_print_string("\n");
+        print_string("Page: ");
+        print_string(page_str);
+        print_string(", physical address: ");
+        print_string(phys_str);
+        print_string("\n");
     }else if(strcmp(string[0],"int")==0){
         uint8_t nb_int = string_to_uint8(string[1]);
         trigger_interrupt(nb_int);
     }else if(strcmp(string[0],"logo")==0){
+        if(Is_13h()){
+            print_string("Isn t supported yet");
+            return;
+        }
         M3h_print_string("(\\  /)\n \\\\//\n /..\\\n \\__/ \n");
         M3h_print_string(" __________    __  __________    ____       ____      __  _______   _______\n|___   ____|  /_/ |____   ___|  / _  |     /    |    / / |   __  | |  _____|\n   /  /      __       /  /     / /_\\ |    /  /| |   / /  |  |  | | |  |_____\n  /  /      /  /     /  /     / ____ |   /  / | |  / /   |  |  | | |______  |\n /  /      /  /     /  /     / /   | |  /  /  | | / /    |  |__| |    ____| |\n/  /      /  /     /  /     / /    | | /  /   | |/ /     |_______| |________|\n");
     }else if(strcmp(string[0],"game")==0){
+        if(Is_13h()){
+            print_string("Doesn t work in video mode");
+            return;
+        }
         init_game();
     }else if(strcmp(string[0],"random")==0){
         if(seed == 0){
@@ -107,14 +119,18 @@ void execute_command(char* string[]){
         random(&seed);
         char buf[10];
         uint32_to_string(seed, buf);
-        M3h_print_string(buf);
+        print_string(buf);
     }else if(strcmp(string[0],"2Dtest")==0){
+        if(Is_13h()){
+            print_string("Doesn t work in video mode");
+            return;
+        }
         M3h_clear_screen();
         renderer();
     }else if(strcmp(string[0],"hist")==0){
         for (int i = 0; i<200;i++){
             if( historique[i] != "S "){
-            M3h_print_string(historique[i]);}
+            print_string(historique[i]);}
         }
     }else if(strcmp(string[0],"fat_format")==0){
         uint16_t buffer[256] = {0xAA, 0xBB,0x34,0x34,0x34,0x34,0x34,0x34,0x34,0x34,0x34,0x34,0x34,0x34,}; // Données "AA BB" en hexadécimal
@@ -125,23 +141,21 @@ void execute_command(char* string[]){
         // Écrire un fichier
         fat32_write_file(0, buffer);
     }else if(strcmp(string[0],"video")==0){
+        if(Is_13h()){
+            print_string("already in video mode");
+            return;
+        }
         switch_to_13h();
         M13h_clear_screen(0);
-        //M13h_set_pixel(2,2,4);
-        /*for(int i=0;i<255;i++){
-            for(int j=0;j<200; j++){
-        M13h_clear_screen(i);}
-        }*/
-        //M13h_put_binary_bitmap(0,0,get_character('a')->minuscule_width,10,7,0,get_character('a')->minuscule);
-        //M13h_put_binary_bitmap(0,0,get_character('g')->graph_width,10,7,0,get_character('g')->graph);
-        M13h_print_string("Hello world");
+        M13h_print_string("Hello \n world");
     }else if(strcmp(string[0],"touppercase")==0){
         to_upper_case(string[1]);
-        M3h_print_string(string[1]);
+        print_string(string[1]);
     }else if(strcmp(string[0],"tolowercase")==0){
         to_lower_case(string[1]);
-        M3h_print_string(string[1]);
+        print_string(string[1]);
     }else{
-        M3h_print_string("bad command");
+        print_string("bad command");
     }
 }
+
