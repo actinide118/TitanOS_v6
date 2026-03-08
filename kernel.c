@@ -32,7 +32,7 @@ void display_sector(uint16_t* sector_data, size_t length) {
     char buffer[6];  // Buffer pour contenir la version en chaîne de chaque nombre (max 7 caractères + '\0')
     for (size_t i = 0; i < length; i++) {
         uint16_to_hex(sector_data[i], buffer);
-        print_string(buffer);
+        M3h_print_string(buffer);
     }
 }
 
@@ -40,29 +40,29 @@ void start_kernel (){
     isr_install();
     irq_install();
     char ch[] = "e";
-    set_char_at_video_memory(*ch,(2*80+79)*2);
-    set_cursor((1*80+3)*2);
-    print_string_color("hello, TitanOS started",0x9F);
-    set_cursor((2*80+2)*2);
-    cadre_de_couleur(0x20);
-    print_string("(\\  /)\n \\\\//\n /..\\\n \\__/ ");
-    print_string("\n> ");
+    M3h_set_char_at_video_memory(*ch,(2*80+79)*2);
+    M3h_set_cursor((1*80+3)*2);
+    M3h_print_string_color("hello, TitanOS started",0x9F);
+    M3h_set_cursor((2*80+2)*2);
+    M3h_cadre_de_couleur(0x20);
+    M3h_print_string("(\\  /)\n \\\\//\n /..\\\n \\__/ ");
+    M3h_print_string("\n> ");
 }
 void execute_command(char* string[]){
     historique[pointeur_d_historique]=*string;
     pointeur_d_historique++;
     if(strcmp(string[0], "end")== 0){
-        print_string("BYE");
+        M3h_print_string("BYE");
         port_byte_out(0x3C0, 0x00);
         asm volatile("hlt");
     }else if(strcmp(string[0], "clear")==0){
-        clear_screen();
-        cadre_de_couleur(0x20);
-        set_cursor((1*80+3)*2);
-        print_string_color("hello, TitanOS started",0x9F);
-        set_cursor((2*80+3)*2);
+        M3h_clear_screen();
+        M3h_cadre_de_couleur(0x20);
+        M3h_set_cursor((1*80+3)*2);
+        M3h_print_string_color("hello, TitanOS started",0x9F);
+        M3h_set_cursor((2*80+3)*2);
     }else if(strcmp(string[0], "version")==0){
-        print_string("TitanOS v6");
+        M3h_print_string("TitanOS v6");
     }else if(strcmp(string[0], "read")==0){
         uint16_t buffer [256];
         uint32_t sector = string_to_uint32(string[1]);
@@ -72,14 +72,14 @@ void execute_command(char* string[]){
         char ascii_tick[12];
         uint32_t nb = get_tick();
         uint32_to_string(nb, ascii_tick);
-        print_string(ascii_tick);
+        M3h_print_string(ascii_tick);
     }else if(strcmp(string[0],"cat")==0){
         uint16_t buffer [256];
         uint32_t sector = string_to_uint32(string[1]);
         read_sector(sector, buffer);
         char resultat [256];
         uint16_array_to_string(buffer, 256,resultat);
-        print_string(resultat);
+        M3h_print_string(resultat);
     }else if(strcmp(string[0],"page")==0){/* Lesson 22: Code to test kmalloc, the rest is unchanged */
         u32 phys_addr;
         u32 page = kmalloc(1000, 1, &phys_addr);
@@ -87,17 +87,17 @@ void execute_command(char* string[]){
         int_to_ascii(page, page_str);
         char phys_str[16];
         int_to_ascii(phys_addr, phys_str);
-        print_string("Page: ");
-        print_string(page_str);
-        print_string(", physical address: ");
-        print_string(phys_str);
-        print_string("\n");
+        M3h_print_string("Page: ");
+        M3h_print_string(page_str);
+        M3h_print_string(", physical address: ");
+        M3h_print_string(phys_str);
+        M3h_print_string("\n");
     }else if(strcmp(string[0],"int")==0){
         uint8_t nb_int = string_to_uint8(string[1]);
         trigger_interrupt(nb_int);
     }else if(strcmp(string[0],"logo")==0){
-        print_string("(\\  /)\n \\\\//\n /..\\\n \\__/ \n");
-        print_string(" __________    __  __________    ____       ____      __  _______   _______\n|___   ____|  /_/ |____   ___|  / _  |     /    |    / / |   __  | |  _____|\n   /  /      __       /  /     / /_\\ |    /  /| |   / /  |  |  | | |  |_____\n  /  /      /  /     /  /     / ____ |   /  / | |  / /   |  |  | | |______  |\n /  /      /  /     /  /     / /   | |  /  /  | | / /    |  |__| |    ____| |\n/  /      /  /     /  /     / /    | | /  /   | |/ /     |_______| |________|\n");
+        M3h_print_string("(\\  /)\n \\\\//\n /..\\\n \\__/ \n");
+        M3h_print_string(" __________    __  __________    ____       ____      __  _______   _______\n|___   ____|  /_/ |____   ___|  / _  |     /    |    / / |   __  | |  _____|\n   /  /      __       /  /     / /_\\ |    /  /| |   / /  |  |  | | |  |_____\n  /  /      /  /     /  /     / ____ |   /  / | |  / /   |  |  | | |______  |\n /  /      /  /     /  /     / /   | |  /  /  | | / /    |  |__| |    ____| |\n/  /      /  /     /  /     / /    | | /  /   | |/ /     |_______| |________|\n");
     }else if(strcmp(string[0],"game")==0){
         init_game();
     }else if(strcmp(string[0],"random")==0){
@@ -107,14 +107,14 @@ void execute_command(char* string[]){
         random(&seed);
         char buf[10];
         uint32_to_string(seed, buf);
-        print_string(buf);
+        M3h_print_string(buf);
     }else if(strcmp(string[0],"2Dtest")==0){
-        clear_screen();
+        M3h_clear_screen();
         renderer();
     }else if(strcmp(string[0],"hist")==0){
         for (int i = 0; i<200;i++){
             if( historique[i] != "S "){
-            print_string(historique[i]);}
+            M3h_print_string(historique[i]);}
         }
     }else if(strcmp(string[0],"fat_format")==0){
         uint16_t buffer[256] = {0xAA, 0xBB,0x34,0x34,0x34,0x34,0x34,0x34,0x34,0x34,0x34,0x34,0x34,0x34,}; // Données "AA BB" en hexadécimal
@@ -137,11 +137,11 @@ void execute_command(char* string[]){
         M13h_print_string("Hello world");
     }else if(strcmp(string[0],"touppercase")==0){
         to_upper_case(string[1]);
-        print_string(string[1]);
+        M3h_print_string(string[1]);
     }else if(strcmp(string[0],"tolowercase")==0){
         to_lower_case(string[1]);
-        print_string(string[1]);
+        M3h_print_string(string[1]);
     }else{
-        print_string("bad command");
+        M3h_print_string("bad command");
     }
 }

@@ -48,13 +48,13 @@ int global_y = 6;
 void item_renderer(struct pixel_array pxs,int x, int y){
     for (int i=0; i<pxs.size; i++){
         struct pixel p = pxs.pixels[i];
-        set_char_at_video_memory(p.ch,((y+p.relative_y)*80+(x+p.relative_x))*2);
+        M3h_set_char_at_video_memory(p.ch,((y+p.relative_y)*80+(x+p.relative_x))*2);
     }
 }
 void item_renderer_color(struct pixel_array pxs,int x, int y,int color){
     for (int i=0; i<pxs.size; i++){
         struct pixel p = pxs.pixels[i];
-        set_char_colr_at_video_memory(p.ch,((y+p.relative_y)*80+(x+p.relative_x))*2,color);
+        M3h_set_char_colr_at_video_memory(p.ch,((y+p.relative_y)*80+(x+p.relative_x))*2,color);
     }
 }
 void renderer(){

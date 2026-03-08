@@ -62,7 +62,7 @@ struct ennemi ennemis[]={
 };
 
 void mv(struct keymap ch, uint8_t flag){
-    clear_screen();
+    M3h_clear_screen();
     switch(ch.normal){
         case 'q':
             if (x>0){
@@ -93,5 +93,5 @@ void mv(struct keymap ch, uint8_t flag){
 
 void init_game(){
     set_callback_keyboard(mv);
-    clear_screen();
+    M3h_clear_screen();
 }

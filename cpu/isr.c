@@ -118,13 +118,13 @@ char *exception_messages[] = {
 
 void isr_handler(registers_t *r) {
     error_occured("interrupt ");
-    print_string("received interrupt: ");
+    M3h_print_string("received interrupt: ");
     char s[3];
     int_to_ascii(r->int_no, s);
-    print_string(s);
-    print_string("\n");
-    print_string(exception_messages[r->int_no]);
-    print_string("\n");
+    M3h_print_string(s);
+    M3h_print_string("\n");
+    M3h_print_string(exception_messages[r->int_no]);
+    M3h_print_string("\n");
     asm("iret");
 }
 

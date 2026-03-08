@@ -9,14 +9,14 @@ u32 tick = 0;
 
 static void timer_callback(registers_t *regs) {
     tick++;
-    /*int offset = get_cursor();
-    set_cursor((1*80+2)*2);
-    print_string("Tick: ");
+    /*int offset = M3h_get_cursor();
+    M3h_set_cursor((1*80+2)*2);
+    M3h_print_string("Tick: ");
     
     char tick_ascii[256];
     int_to_ascii(tick, tick_ascii);
-    print_string(tick_ascii);
-    set_cursor(offset);*/
+    M3h_print_string(tick_ascii);
+    M3h_set_cursor(offset);*/
 }
 u32 get_tick(){
     return tick;

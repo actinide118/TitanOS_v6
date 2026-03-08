@@ -14,29 +14,29 @@
 
 #include <stdint.h>
 
-void print_string(char *string);
+void M3h_print_string(char *string);
 
-void print_string_color(char *string, int color);
+void M3h_print_string_color(char *string, int color);
 
-void print_nl();
+void M3h_print_nl();
 
-void clear_screen();
+void M3h_clear_screen();
 
-int scroll_ln(int offset);
+int M3h_scroll_ln(int offset);
 
-void set_cursor(int offset);
+void M3h_set_cursor(int offset);
 
-int get_cursor();
+int M3h_get_cursor();
 
 void error_occured(char *string);
 
-void print_backspace();
+void M3h_print_backspace();
 
-void set_char_at_video_memory(char caracter, int offset);
+void M3h_set_char_at_video_memory(char caracter, int offset);
 
-void cadre_de_couleur(int color);
+void M3h_cadre_de_couleur(int color);
 
-void set_char_colr_at_video_memory(char ch,int offset, int color);
+void M3h_set_char_colr_at_video_memory(char ch,int offset, int color);
 
 uint8_t get_foreground(void);
 

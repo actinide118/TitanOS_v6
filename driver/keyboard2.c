@@ -53,7 +53,7 @@ static void keyboard_interrupt_l2( uint8_t code )
 	int event;
 	if(code > 0x80) {
 		direction = 0;
-		//print_string("h");
+		//M3h_print_string("h");
 		event = EVENT_KEY_UP;
 		code = code & 0x7f;
 	} else {
@@ -87,7 +87,7 @@ static void keyboard_interrupt_l2( uint8_t code )
 	if(shift_mode == 1 && k->normal == ASCII_BS){
 		reset();
 	}
-	//print_string(&k->normal);
+	//M3h_print_string(&k->normal);
 	if (direction == 1){
 		emit_keyboard(*k,keymap_flags);
 	}else{
@@ -103,8 +103,8 @@ static void keyboard_interrupt(registers_t *regs)
 	uint8_t c = KEY_INVALID;
 	char chaine[3] ;
 	//uint8_to_string(code, chaine);
-	//print_string(chaine);
-	//print_string(" ");
+	//M3h_print_string(chaine);
+	//M3h_print_string(" ");
 
 	if(code == KEYCODE_EXTRA) {
 		expect_extra = 1;
@@ -137,15 +137,15 @@ static char key_buffer[256];
 void keycallback(struct keymap ch, uint8_t flag){
     if (ch.normal == ASCII_BS) {
         if (backspace(key_buffer)) {
-            print_backspace();
+            M3h_print_backspace();
         }
     } else if (ch.normal == ASCII_CR) {
-        print_nl();
+        M3h_print_nl();
         char* result[10];
         int count = split(key_buffer, ' ', result, 10);
         execute_command(result);
         key_buffer[0] = '\0';
-        print_string("\n> ");
+        M3h_print_string("\n> ");
     }else if(ch.special == KEYMAP_ALPHA || ch.special == 0){
 		uint8_t shift = (flag & MASK_SHIFT) ? 1 : 0;
     	uint8_t alt = (flag & MASK_ALT) ? 1 : 0;
@@ -165,7 +165,7 @@ void keycallback(struct keymap ch, uint8_t flag){
 
         append(key_buffer, letter);
         char str[2] = {letter, '\0'};
-        print_string(str);
+        M3h_print_string(str);
     }
 }
 void keyup(struct keymap km, uint8_t arg2){
@@ -174,12 +174,12 @@ void keyup(struct keymap km, uint8_t arg2){
 void reset(){
 	set_callback_keyboard_up(keyup);
 	set_callback_keyboard(keycallback);
-	clear_screen();
-    cadre_de_couleur(0x20);
-    set_cursor((1*80+3)*2);
-    print_string_color("hello, TitanOS started",0x9F);
-    set_cursor((2*80+3)*2);
-	print_string("\n> ");
+	M3h_clear_screen();
+    M3h_cadre_de_couleur(0x20);
+    M3h_set_cursor((1*80+3)*2);
+    M3h_print_string_color("hello, TitanOS started",0x9F);
+    M3h_set_cursor((2*80+3)*2);
+	M3h_print_string("\n> ");
 }
 
 void keyboard_init(){

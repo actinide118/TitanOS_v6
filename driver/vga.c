@@ -5,7 +5,7 @@
 #include "../writing/supplier.h"
 
 
-void set_cursor(int offset) {
+void M3h_set_cursor(int offset) {
     offset /= 2;
     port_byte_out(VGA_CTRL_REGISTER, VGA_OFFSET_HIGH);
     port_byte_out(VGA_DATA_REGISTER, (unsigned char) (offset >> 8));
@@ -13,107 +13,107 @@ void set_cursor(int offset) {
     port_byte_out(VGA_DATA_REGISTER, (unsigned char) (offset & 0xff));
 }
 
-int get_cursor() {
+int M3h_get_cursor() {
     port_byte_out(VGA_CTRL_REGISTER, VGA_OFFSET_HIGH);
     int offset = port_byte_in(VGA_DATA_REGISTER) << 8;
     port_byte_out(VGA_CTRL_REGISTER, VGA_OFFSET_LOW);
     offset += port_byte_in(VGA_DATA_REGISTER);
     return offset * 2;
 }
-void set_char_at_video_memory(char character, int offset) {
+void M3h_set_char_at_video_memory(char character, int offset) {
     unsigned char *vidmem = (unsigned char *) VIDEO_ADDRESS;
     vidmem[offset] = character;
     vidmem[offset + 1] = WHITE_ON_BLACK;
 }
-int get_offset(int col, int row) {
+int M3h_get_offset(int col, int row) {
     return 2 * (row * MAX_COLS + col);
 }
 
-int get_row_from_offset(int offset) {
+int M3h_get_row_from_offset(int offset) {
     return offset / (2 * MAX_COLS);
 }
 
-int move_offset_to_new_line(int offset) {
-    return get_offset(2, get_row_from_offset(offset) + 1);
+int M3h_move_offset_to_new_line(int offset) {
+    return M3h_get_offset(2, M3h_get_row_from_offset(offset) + 1);
 }
 
-int scroll_ln(int offset) {
+int M3h_scroll_ln(int offset) {
     memory_copy(
-            (uint8_t * )(get_offset(0, 1) + VIDEO_ADDRESS),
-            (uint8_t * )(get_offset(0, 0) + VIDEO_ADDRESS),
+            (uint8_t * )(M3h_get_offset(0, 1) + VIDEO_ADDRESS),
+            (uint8_t * )(M3h_get_offset(0, 0) + VIDEO_ADDRESS),
             MAX_COLS * (MAX_ROWS - 1) * 2
     );
 
     for (int col = 0; col < MAX_COLS; col++) {
-        set_char_at_video_memory(' ', get_offset(col, MAX_ROWS - 1));
+        M3h_set_char_at_video_memory(' ', M3h_get_offset(col, MAX_ROWS - 1));
     }
 
     return offset - 2 * MAX_COLS;
 }
 
 
-void print_string(char *string) {
-    int offset = get_cursor();
+void M3h_print_string(char *string) {
+    int offset = M3h_get_cursor();
     int i = 0;
     while (string[i] != 0) {
         if (offset >= MAX_ROWS * MAX_COLS * 2) {
-            offset = scroll_ln(offset);
+            offset = M3h_scroll_ln(offset);
         }
         if (string[i] == '\n') {
-            offset = move_offset_to_new_line(offset);
+            offset = M3h_move_offset_to_new_line(offset);
         } else {
-            set_char_at_video_memory(string[i], offset);
+            M3h_set_char_at_video_memory(string[i], offset);
             offset += 2;
         }
         i++;
     }
-    set_cursor(offset);
+    M3h_set_cursor(offset);
 }
-void set_char_colr_at_video_memory(char ch,int offset, int color){
+void M3h_set_char_colr_at_video_memory(char ch,int offset, int color){
     unsigned char *vidmem = (unsigned char *) VIDEO_ADDRESS;
     vidmem[offset] = ch;
     vidmem[offset + 1] = color;
 }
-void print_string_color(char *string, int color){
-    int offset = get_cursor();
+void M3h_print_string_color(char *string, int color){
+    int offset = M3h_get_cursor();
     int i = 0;
     while (string[i] != 0) {
         if (offset >= MAX_ROWS * MAX_COLS * 2) {
-            offset = scroll_ln(offset);
+            offset = M3h_scroll_ln(offset);
         }
         if (string[i] == '\n') {
-            offset = move_offset_to_new_line(offset);
+            offset = M3h_move_offset_to_new_line(offset);
         } else {
-            set_char_colr_at_video_memory(string[i], offset, color);
+            M3h_set_char_colr_at_video_memory(string[i], offset, color);
             offset += 2;
         }
         i++;
     }
-    set_cursor(offset);
+    M3h_set_cursor(offset);
 }
 
-void print_nl() {
-    int newOffset = move_offset_to_new_line(get_cursor());
+void M3h_print_nl() {
+    int newOffset = M3h_move_offset_to_new_line(M3h_get_cursor());
     if (newOffset >= MAX_ROWS * MAX_COLS * 2) {
-        newOffset = scroll_ln(newOffset);
+        newOffset = M3h_scroll_ln(newOffset);
     }
-    set_cursor(newOffset);
+    M3h_set_cursor(newOffset);
 }
 
-void clear_screen() {
+void M3h_clear_screen() {
     int screen_size = MAX_COLS * MAX_ROWS;
     for (int i = 0; i < screen_size; ++i) {
-        set_char_at_video_memory(' ', i * 2);
+        M3h_set_char_at_video_memory(' ', i * 2);
     }
-    set_cursor(get_offset(0, 0));
+    M3h_set_cursor(M3h_get_offset(0, 0));
 }
 
-void print_backspace() {
-    int newCursor = get_cursor() - 2;
-    set_char_at_video_memory(' ', newCursor);
-    set_cursor(newCursor);
+void M3h_print_backspace() {
+    int newCursor = M3h_get_cursor() - 2;
+    M3h_set_char_at_video_memory(' ', newCursor);
+    M3h_set_cursor(newCursor);
 }
-void cadre_de_couleur(int color){
+void M3h_cadre_de_couleur(int color){
     int i= 0;
     int offset = 0x00;
     while(i < 80){
@@ -170,8 +170,8 @@ void cadre_de_couleur(int color){
     }
 }
 void error_occured(char *string){
-    clear_screen();
-    cadre_de_couleur(BLACK_ON_RED);
+    M3h_clear_screen();
+    M3h_cadre_de_couleur(BLACK_ON_RED);
     int offset = (10*80+30)*2;
     int i = 0;
     while (string[i] != 0) {
@@ -181,7 +181,7 @@ void error_occured(char *string){
         offset += 2;
         i++;
     }
-    set_cursor((10*80+30+i)*2);
+    M3h_set_cursor((10*80+30+i)*2);
 }
 
 uint8_t foreground=7;
