@@ -39,10 +39,10 @@ DRIVERS := $(patsubst ./driver/%.c, ./bin/%.o, $(wildcard ./driver/*.c))
 	gcc -ffreestanding -m32 -fno-pie -fno-stack-protector -c $< -o $@
 
 ./bin/kernel.bin: ./bin/Cloader.o ./bin/interrupt.o ./bin/evt.o ./bin/2GRTOS.o ./bin/kernel.o ./bin/supplier.o $(CPU_OBJS) $(APPLIS) $(UTILS) $(DRIVERS)
-	ld -o $@ -Ttext 0x7e00 $^ --oformat binary -m elf_i386
+	ld -o $@ -Ttext 0x8000 $^ --oformat binary -m elf_i386
 
 ./bin/boot.bin:
-	nasm -f bin -o ./bin/boot.bin boot.asm
+	nasm -f bin -o ./bin/boot.bin boot2.asm
 
 build: ./bin/boot.bin ./bin/kernel.bin
 	dd if=/dev/zero of=os-image.bin bs=512 count=2880

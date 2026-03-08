@@ -15,18 +15,20 @@ start:
 
     mov si, message
     call print_string
-
-    ; Charger le noyau à partir du secteur 2 (secteur 1 est le bootloader)
-    mov bx, 0x8000     ; Charger le noyau à l'adresse 0x1000
-    mov ax, 0x0000
-    mov es, ax
-    mov dh, 0x00       ; Numéro de tête 0 (première tête)
-    mov dl, [disk_number]      ; Périphérique 0 (disque)
-    mov ah, 0x02       ; Fonction BIOS 0x02 : Lire des secteurs
-    mov al, 0x75    ; Nombre de secteurs à lire
-    mov ch, 0x00       ; Cylindre 0
-    mov cl, 0x02       ; Secteur 2 (le premier secteur est le bootloader)
-    int 0x13           ; Appel du BIOS pour lire le secteur
+    jmp read
+    DAPACK:
+	db	0x10
+	db	0
+blkcnt:	dw	100		; int 13 resets this to # of blocks actually read/written
+db_add:	dw	0x8000		; memory buffer destination address (0:7c00)
+	dw	0		; in memory page zero
+d_lba:	dd	1		; put the lba to read in this spot
+	dd	0		; more storage bytes only for big lba's ( > 4 bytes )
+read:
+	mov si, DAPACK		; address of "disk address packet"
+	mov ah, 0x42		; AL is unused
+	mov dl, 0x80		; drive number 0 (OR the drive # with 0x80)
+	int 0x13
     ; Vérifier si la lecture a échoué
     jc alert_error
     
