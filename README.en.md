@@ -26,7 +26,7 @@ Print the number of CPU clock tick since it's initialization
 ### cat 
 Is supposed to print the text variant of a disk sector
 ### page
-give a range of free adress ( it doesn't provide any security because CPU paging is not active )
+Test command for the memory allocation methods
 ### int 
 Make the system crash ( expected result )
 ### 2Dtest

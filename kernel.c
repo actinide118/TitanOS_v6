@@ -41,6 +41,7 @@ void display_sector(uint16_t* sector_data, size_t length) {
 void start_kernel (){
     isr_install();
     irq_install();
+    init_struct();
     char ch[] = "e";
     M3h_set_char_at_video_memory(*ch,(2*80+79)*2);
     M3h_set_cursor((1*80+3)*2);
@@ -86,19 +87,8 @@ bool execute_command(char* string[]){
         char resultat [256];
         uint16_array_to_string(buffer, 256,resultat);
         print_string(resultat);
-    }else if(strcmp(string[0],"page")==0){/* Lesson 22: Code to test kmalloc, the rest is unchanged */
-        /*u32 phys_addr;
-        u32 page = kmalloc(1000, 1, &phys_addr);
-        char page_str[16];
-        int_to_ascii(page, page_str);
-        char phys_str[16];
-        int_to_ascii(phys_addr, phys_str);
-        print_string("Page: ");
-        print_string(page_str);
-        print_string(", physical address: ");
-        print_string(phys_str);
-        print_string("\n");*/
-        init_struct();
+    }else if(strcmp(string[0],"page")==0){
+       
         char* str = (char*)kmalloc(9*sizeof(char));
         str[0]='e';
         str[1]='f';

@@ -29,7 +29,7 @@ Renvois le nombre de tick cpu depuis l'nitialisation de l'horloge
 ### cat 
 Est sensé afficher sous forme textuel un secteur disque
 ### page
-Donne une plage d'adresse dispnible ( ceci ne permet pas d'isolation mémoire car un programme, si il y avait un moyen d'en éxecuter, peut accéder toute la mémoire )
+Commande visant à tester le système d'allocation mémoire
 ### int 
 Cause plus ou moins un plantage du ystème ( voulu )
 ### 2Dtest
