@@ -14,6 +14,7 @@
 #include "./writing/supplier.h"
 #include "./util/stringmanipulation.h"
 #include "./gui/window.h"
+#include "./driver/memory.h"
 
 uint32_t seed = 0;
 char *historique[200];
@@ -86,7 +87,7 @@ bool execute_command(char* string[]){
         uint16_array_to_string(buffer, 256,resultat);
         print_string(resultat);
     }else if(strcmp(string[0],"page")==0){/* Lesson 22: Code to test kmalloc, the rest is unchanged */
-        u32 phys_addr;
+        /*u32 phys_addr;
         u32 page = kmalloc(1000, 1, &phys_addr);
         char page_str[16];
         int_to_ascii(page, page_str);
@@ -96,7 +97,16 @@ bool execute_command(char* string[]){
         print_string(page_str);
         print_string(", physical address: ");
         print_string(phys_str);
-        print_string("\n");
+        print_string("\n");*/
+        init_struct();
+        char* str = (char*)kmalloc(9*sizeof(char));
+        str[0]='e';
+        str[1]='f';
+        str[2]='g';
+        str[8]='2';
+        free(str);
+        //merge(HEAP_START);
+        return false;
     }else if(strcmp(string[0],"int")==0){
         uint8_t nb_int = string_to_uint8(string[1]);
         trigger_interrupt(nb_int);
