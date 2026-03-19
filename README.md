@@ -6,7 +6,7 @@ Pour faire tourner ce programme vous aurez besoin des outils du paquet `qemu` , 
 Après avoir satisfait les dépendances éxecuter `make build`
 
 # Éxecution
-Éxecuter `make all` ou `make run`
+Exécuter `make all` ou `make run`
 
 # Résultat
 Écran d'acceuil:
@@ -19,13 +19,13 @@ Après avoir satisfait les dépendances éxecuter `make build`
 ### end
 Arrête le cpu mais n'éteint pas la carte graphique
 ### clear 
-Efface l'écran
+Éfface l'écran
 ### version
-Ecris la version
+Écris la version
 ### read
 Affiche sous forme hexadécimal un secteur disque
 ### tick
-Renvois le nombre de tick cpu depuis l'nitialisation de l'horloge
+Renvoie le nombre de ticks cpu depuis l'initialisation de l'horloge
 ### cat 
 Est sensé afficher sous forme textuel un secteur disque
 ### page
@@ -37,11 +37,11 @@ Affiche une "image" composée de deux éléments distint
 ### hist 
 Ne marche pas.
 ### fat_format
-Inutile ( je ne suis même pas sur qu'il fonctionne )
+Inutile ( je ne suis même pas sûr qu'elle fonctionne )
 ### touppercase
 Met en majuscule la chaine passée en argument
 ### tolowercase
 Met en minuscule la chaine passée en argument
 ### video
-Change le mode d'affichage de la carte graphique de text 3h à graphic 256 color linear 13h et affiche les caractères alphanumériques du système en mode 13h.
-Notez que dans ce mode le terminal ne marche pas et pour retourner dans le mode "classique" la VM doit être redémarré
+Change le mode d'affichage de la carte graphique de text 3h à graphic 256 color linear 13h.
+Notez que certaines commandes ne fonctionnent que dans l'un ou l'autre des modes
