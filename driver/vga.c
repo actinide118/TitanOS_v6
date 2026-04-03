@@ -273,6 +273,16 @@ void M13h_set_pixel(int x, int y, int color){
     vga_buffer[offset]=(uint8_t)color;
 }
 
+uint8_t M13h_get_pixel(int x, int y){
+    if(x < 0 || x>= VGA_WIDTH || y < 0 || y >=VGA_HEIGHT){
+        return 0;
+    }
+    uint8_t* vga_buffer = (uint8_t*)VGA256_ADDRESS;
+    int offset = (y * VGA_WIDTH) + x;
+    
+    return (uint8_t)vga_buffer[offset];
+}
+
 void M13h_clear_screen(int color){
     for(int i=0; i<VGA_HEIGHT;i++){
         for(int j=0; j<VGA_WIDTH;j++){

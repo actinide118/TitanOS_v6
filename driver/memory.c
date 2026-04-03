@@ -1,6 +1,5 @@
 #include "memory.h"
 #include "../util/util.h"
-#include "../driver/vga.h"
 
 
 void init_struct(void){
@@ -18,7 +17,7 @@ void *crawl(uint32_t adress){
         if(current_block->size+i_adress>=HEAP_END){
             return 0;
         }
-        i_adress=i_adress+current_block->size;
+        i_adress=i_adress+current_block->size+sizeof(struct memory_block);
         current_block=(struct memory_block* )i_adress;
     }
 }

@@ -37,3 +37,13 @@ bool create_window(struct window* fenetre){// The six first fields of the struct
 void del_window(struct window* fenetre){
     M13h_draw_rectangle(fenetre->top,fenetre->left,fenetre->width,fenetre->height,get_background());
 }
+
+void W_scroll(struct window* fenetre,int ln){
+    for(int i=0;i<fenetre->usable_height-ln;i++){
+        for(int j=0;j<fenetre->usable_width;j++){
+            uint8_t color=M13h_get_pixel(fenetre->usable_left+j,fenetre->usable_top+i+ln);
+            M13h_set_pixel(fenetre->usable_left+j,fenetre->usable_top+i,(int)color);
+        }
+    }
+    M13h_draw_rectangle(fenetre->usable_left,fenetre->usable_top+fenetre->usable_height-ln+2,fenetre->usable_width,ln,(int)fenetre->color_intern);
+}

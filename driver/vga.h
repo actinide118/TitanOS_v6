@@ -62,6 +62,8 @@ void M13h_clear_screen(int color);
 
 void M13h_set_pixel(int x, int y, int color);
 
+uint8_t M13h_get_pixel(int x, int y);
+
 void M13h_put_binary_bitmap(int x_pos, int y_pos,int width, int height,int color1,int color2, bool arr[]);
 
 void M13h_put_color_bitmap(int x_pos, int y_pos,int width, int height, uint8_t arr[]);
