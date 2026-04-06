@@ -4,11 +4,13 @@
 #include "../driver/ports.h"
 #include "isr.h"
 #include "../kernel.h"
+#include "../event/evt_queu.h"
 
 u32 tick = 0;
 
 static void timer_callback(registers_t *regs) {
     tick++;
+    emit_timer_tick(tick);
     /*int offset = M3h_get_cursor();
     M3h_set_cursor((1*80+2)*2);
     M3h_print_string("Tick: ");

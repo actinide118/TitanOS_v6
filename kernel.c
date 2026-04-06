@@ -16,6 +16,7 @@
 #include "./gui/window.h"
 #include "./driver/memory.h"
 #include "./gui/text_window.h"
+#include "./applis/terminal.h"
 
 uint32_t seed = 0;
 char *historique[200];
@@ -182,9 +183,24 @@ bool execute_command(char* string[]){
         }
         
     }else if(strcmp(string[0],"fenetretext")==0){
+        if(!Is_13h()){
+            print_string("only work in graphic mode");
+            return false;}
         text_window_t* fen=WText_create_window(100,200,"programme",3,15,15,5);
         W_scroll(fen->fenetre,8);
+        WText_printstring(fen,"cc");
+        WText_erase_last_line(fen);
+        WText_erase_last_line(fen);
+        WText_printstring(fen,"coucou");
         WText_printstring(fen,"cc la mifa\ndeuxieme ligne\net ensuite\net ensuite1\net ensuite2\net ensuite3\net ensuite4\net ensuite5\net ensuite6\net ensuite7\net ensuite8\net ensuite9\net ensuite10");
+        WText_erase_last_line(fen);
+        WText_erase_last_line(fen);
+        return true;
+    }else if(strcmp(string[0],"term")==0){
+        if(!Is_13h()){
+            print_string("only work in graphic mode");
+            return false;}
+        Term_init("");
     }else{
         print_string("bad command");
     }

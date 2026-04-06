@@ -33,3 +33,15 @@ void emit_keyboard_up(struct keymap km, uint8_t arg2) {
         callback_down(km, arg2); // Appelle le callback si défini
     } 
 }
+
+static callback_tick_t callbacktimer= NULL;
+
+void set_callback_tick(callback_tick_t cb){
+    callbacktimer=cb;
+}
+
+void emit_timer_tick(uint32_t nb){
+    if(callbacktimer){
+        callbacktimer(nb);
+    }
+}

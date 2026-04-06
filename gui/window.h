@@ -18,3 +18,4 @@ struct window{
 bool create_window(struct window* fenetre);
 void del_window(struct window* fenetre);
 void W_scroll(struct window* fenetre,int ln);
+void W_clear(struct window* fenetre);

@@ -47,3 +47,7 @@ void W_scroll(struct window* fenetre,int ln){
     }
     M13h_draw_rectangle(fenetre->usable_left,fenetre->usable_top+fenetre->usable_height-ln+2,fenetre->usable_width,ln,(int)fenetre->color_intern);
 }
+
+void W_clear(struct window* fenetre){
+   M13h_draw_rectangle(fenetre->usable_left,fenetre->usable_top,fenetre->usable_width,fenetre->usable_height+2,fenetre->color_intern); 
+}
