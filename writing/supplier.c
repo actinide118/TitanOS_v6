@@ -1,6 +1,6 @@
 #include "./supplier.h"
 
-struct character characters[66]={{
+struct character characters[69]={{
     .letter = 'a',
     .graph =    {
         false,false,false,false,false,false,
@@ -987,6 +987,51 @@ struct character characters[66]={{
         false,false,false,
     },
     .graph_width=3
+},{
+    .letter='<',
+    .graph={
+        false,false,false,false,false,false,
+        false,false,false,false,true,false,
+        false,false,false,true,false,false,
+        false,false,true,false,false,false,
+        false,true,false,false,false,false,
+        false,false,true,false,false,false,
+        false,false,false,true,false,false,
+        false,false,false,false,true,false,
+        false,false,false,false,false,false,
+        false,false,false,false,false,false,
+    },
+    .graph_width=6,
+},{
+    .letter='\"',
+    .graph={
+        false,true,false,true,false,
+        false,true,false,true,false,
+        false,true,false,true,false,
+        false,false,false,false,false,
+        false,false,false,false,false,
+        false,false,false,false,false,
+        false,false,false,false,false,
+        false,false,false,false,false,
+        false,false,false,false,false,
+        false,false,false,false,false,
+    },
+    .graph_width=5
+},{
+    .letter='&',
+    .graph={
+        false,false,true,true,false,false,false,
+        false,true,false,false,true,false,false,
+        false,true,false,false,false,false,false,
+        false,false,true,false,false,true,false,
+        false,false,false,true,true,false,false,
+        false,false,true,false,false,true,false,
+        false,true,false,false,false,true,false,
+        false,false,true,true,true,false,false,
+        false,false,false,false,false,false,false,
+        false,false,false,false,false,false,false,
+    },
+    .graph_width=7
 }
 };
 
@@ -1009,7 +1054,7 @@ struct character default_out={
 
 character* get_character(char input){
     //character* characters = (character*) 0x5000;
-    for(int i=0; i<66; i++){
+    for(int i=0; i<69; i++){
         if(characters[i].letter == input){
             return &characters[i];
         }

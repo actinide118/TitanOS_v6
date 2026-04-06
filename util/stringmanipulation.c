@@ -17,3 +17,11 @@ void to_lower_case(char* str){
         str++;
     }
 }
+
+bool is_alphabetic_char(char ch){
+    if((ch>=0x41 && ch<=0x5A)||(ch>=0x61 && ch<=0x7A)){
+        return true;
+    }else{
+        return false;
+    }
+}

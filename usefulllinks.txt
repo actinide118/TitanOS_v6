@@ -1,0 +1,4 @@
+https://f.osdev.org/viewtopic.php?p=260720#p260720
+https://wiki.osdev.org/VGA_Hardware
+https://forum.osdev.org/viewtopic.php?t=57554
+https://gist.github.com/cesarmiquel/1780ab6078b9735371d1f10a9d60d233

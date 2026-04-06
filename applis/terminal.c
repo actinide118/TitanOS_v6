@@ -1,9 +1,7 @@
 #include "terminal.h"
-#include "../gui/text_window.h"
-#include "../driver/vga.h"
-#include "../driver/memory.h"
-#include "../event/evt_queu.h"
-#include "../util/ascii.h"
+#include "terminal_executor.h"
+#include "term_parser.h"
+
 
 uint8_t current_command_lenght=0;
 uint8_t current_command_lines=1;
@@ -12,6 +10,10 @@ bool can_change_indicator=true;
 
 text_window_t* graphic_container;
 char *current_command_line;
+
+text_window_t* get_term_window(){
+    return graphic_container;
+}
 
 void callback(uint32_t nb){
     if(!can_change_indicator){
@@ -45,6 +47,8 @@ void keypresscallback(struct keymap ch, uint8_t flag){
         WText_printstring(graphic_container,">");
         WText_printstring(graphic_container,current_command_line);
     } else if (ch.normal == ASCII_CR) {
+        returnstruct_t* parsed=parse_command_line(current_command_line);
+        execute_term_command(parsed->arr[0]);
         WText_printstring(graphic_container,"\n>");
         //char* result[10];
         //int count = split(key_buffer, ' ', result, 10);
