@@ -11,3 +11,4 @@ text_window_t* WText_create_window(uint16_t usable_height, uint16_t usable_width
 uint8_t WText_printstring(text_window_t *window,char* string);
 void WText_erase_last_line(text_window_t *window);
 void WText_erase_last_char(text_window_t* window);
+uint8_t WText_printstring_color(text_window_t *window,char* string,uint8_t foreground,uint8_t background);

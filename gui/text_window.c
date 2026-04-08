@@ -75,3 +75,43 @@ void WText_erase_last_char(text_window_t* window){
     M13h_draw_rectangle(window->fenetre->usable_left+window->curr_col-last_char_width,window->fenetre->usable_top+window->curr_row,last_char_width,10,window->fenetre->color_intern);
     window->curr_col-=last_char_width;
 }
+
+bool Intern_WText_putchar_color(text_window_t *window,char ch,uint8_t foreground,uint8_t background){
+    if(ch=='\n'){
+        if(window->curr_row+10>=window->fenetre->usable_height){
+            W_scroll(window->fenetre,10);
+            window->curr_col=0;
+        }else{
+            window->curr_row+=10;
+            window->curr_col=0;
+        }
+        return true;
+    }
+    bool haschangedline=false;
+    struct character *graphic_char=get_character(ch);
+    if(graphic_char->graph_width+window->curr_col>window->fenetre->usable_width){
+        if(window->curr_row+10>=window->fenetre->usable_height){
+            W_scroll(window->fenetre,10);
+            window->curr_col=0;
+        }else{
+            window->curr_row+=10;
+            window->curr_col=0;
+        }
+        haschangedline=true;
+    }
+    M13h_put_binary_bitmap(window->fenetre->usable_left+window->curr_col,window->fenetre->usable_top+window->curr_row,graphic_char->graph_width,10,foreground,background,graphic_char->graph);
+    window->curr_col+=graphic_char->graph_width;
+    last_char_width=graphic_char->graph_width;
+    return haschangedline;
+}
+
+uint8_t WText_printstring_color(text_window_t *window,char* string,uint8_t foreground,uint8_t background){
+    uint8_t chgmt=0;
+    while(*string){
+        if(Intern_WText_putchar_color(window,*string,foreground,background)){
+            chgmt++;
+        }
+        *string++;
+    }
+    return chgmt;
+}
