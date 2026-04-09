@@ -43,6 +43,22 @@ void GObj_set(growing_obj_t* obj,char* key,void* value){
             curr=curr->next;
         }
     }
+    is_finished=false;
+    curr=obj;
+    while(!is_finished){
+        if(curr->key==NULL){
+            is_finished=true;
+            curr->value=value;
+            curr->key=key;
+            return;
+        }
+        if(curr->next==NULL){
+            is_finished=true;
+        }else{
+            curr=curr->next;
+        }
+    }
+
     growing_obj_t* next_obj=kmalloc(sizeof(growing_obj_t));
     next_obj->key=key;
     next_obj->value=value;

@@ -45,7 +45,7 @@ void keypresscallback(struct keymap ch, uint8_t flag){
             WText_erase_last_line(graphic_container);
         }
         WText_printstring(graphic_container,">");
-        WText_printstring(graphic_container,current_command_line);
+        current_command_lines=WText_printstring(graphic_container,current_command_line);
     } else if (ch.normal == ASCII_CR) {
         returnstruct_t* parsed=parse_command_line(current_command_line);
         if(parsed->len>0){
@@ -59,7 +59,7 @@ void keypresscallback(struct keymap ch, uint8_t flag){
             current_command_line[i] = '\0';
         }
         current_command_lenght=0;
-        current_command_lines=1;
+        current_command_lines=0;
     }else if(ch.special == KEYMAP_ALPHA || ch.special == 0){
 		uint8_t shift = (flag & MASK_SHIFT) ? 1 : 0;
     	uint8_t alt = (flag & MASK_ALT) ? 1 : 0;

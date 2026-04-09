@@ -1,6 +1,6 @@
 #include "./supplier.h"
 
-struct character characters[69]={{
+struct character characters[71]={{
     .letter = 'a',
     .graph =    {
         false,false,false,false,false,false,
@@ -1032,6 +1032,37 @@ struct character characters[69]={{
         false,false,false,false,false,false,false,
     },
     .graph_width=7
+},{
+    .letter=':',
+    .graph={
+        false,false,false,
+        false,false,false,
+        false,false,false,
+        false,true,false,
+        false,false,false,
+        false,false,false,
+        false,true,false,
+        false,false,false,
+        false,false,false,
+        false,false,false,
+    },
+    .graph_width=3,
+
+},{
+    .letter='\'',
+    .graph={
+        false,true,false,
+        false,true,false,
+        false,true,false,
+        false,true,false,
+        false,false,false,
+        false,false,false,
+        false,false,false,
+        false,false,false,
+        false,false,false,
+        false,false,false,
+    },
+    .graph_width=3,
 }
 };
 
@@ -1054,7 +1085,7 @@ struct character default_out={
 
 character* get_character(char input){
     //character* characters = (character*) 0x5000;
-    for(int i=0; i<69; i++){
+    for(int i=0; i<71; i++){
         if(characters[i].letter == input){
             return &characters[i];
         }

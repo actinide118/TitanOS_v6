@@ -11,6 +11,8 @@ void echolor(char *str,uint8_t foreground,uint8_t background){
     }
     if(background==0){
         ibackground=get_term_window()->fenetre->color_intern;
+    }else{
+        ibackground=background;
     }
     WText_printstring(get_term_window(),"\n");
     WText_printstring_color(get_term_window(),str,iforeground,ibackground);
@@ -19,14 +21,21 @@ void echolor(char *str,uint8_t foreground,uint8_t background){
 void execute_term_command(command_parsed_t* command){
     if(strcmp(command->commande,"echo")==0){
         if(command->argslen!=1){
-            WText_printstring_color(get_term_window(),"\necho needs 1 arguments",4,0);
+            WText_printstring_color(get_term_window(),"\necho needs 1 arguments have: ",4,0);
+            char buf[3];
+            uint8_to_string(command->argslen,buf);
+            WText_printstring(get_term_window(),buf);
             return;
         }
         WText_printstring(get_term_window(),"\n");
         WText_printstring(get_term_window(),command->args[0]);
     }else if(strcmp(command->commande,"echolor")==0){
         if(command->argslen!=3){
-            WText_printstring_color(get_term_window(),"\necholor needs 3 arguments",4,0);
+            WText_printstring_color(get_term_window(),"\necholor needs 3 arguments have: ",4,0);
+            char buf[3];
+            uint8_to_string(command->argslen,buf);
+            WText_printstring(get_term_window(),buf);
+            return;
         }
         echolor(command->args[0],string_to_uint8(command->args[1]),string_to_uint8(command->args[2]));
     }

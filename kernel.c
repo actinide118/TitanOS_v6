@@ -201,6 +201,11 @@ bool execute_command(char* string[]){
             print_string("only work in graphic mode");
             return false;}
         Term_init("");
+    }else if(strcmp(string[0],"slice")==0){
+        char first[8]="bonjour ";
+        char sc[3];
+        slice(first,sc,1,2);
+        print_string(sc);
     }else{
         print_string("bad command");
     }
