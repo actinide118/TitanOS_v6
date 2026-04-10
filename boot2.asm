@@ -19,7 +19,7 @@ start:
     DAPACK:
 	db	0x10
 	db	0
-blkcnt:	dw	100		; int 13 resets this to # of blocks actually read/written
+blkcnt:	dw	100 	; int 13 resets this to # of blocks actually read/written
 db_add:	dw	0x8000		; memory buffer destination address (0:7c00)
 	dw	0		; in memory page zero
 d_lba:	dd	1		; put the lba to read in this spot

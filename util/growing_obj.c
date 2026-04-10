@@ -2,9 +2,13 @@
 #include "../driver/memory.h"
 #include <stddef.h>
 #include "../util/util.h"
+#include "../driver/vga.h"
 
 growing_obj_t* GObj_create(){
     growing_obj_t* obj=(growing_obj_t*)kmalloc(sizeof(growing_obj_t));
+    if(obj==NULL){
+        print_string("Allocation failed");
+    }
     obj->key=NULL;
     obj->value=NULL;
     obj->next=NULL;

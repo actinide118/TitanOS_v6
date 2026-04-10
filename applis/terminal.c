@@ -7,9 +7,24 @@ uint8_t current_command_lenght=0;
 uint8_t current_command_lines=1;
 bool indicator_on=true;
 bool can_change_indicator=true;
+growing_obj_t* strbuf;
+int line_printed=0;
+growing_obj_t* user_variables;
 
 text_window_t* graphic_container;
 char *current_command_line;
+
+growing_obj_t* get_str_buf(){
+    return strbuf;
+}
+
+int* get_line_printed(){
+    return &line_printed;
+}
+
+growing_obj_t* get_user_variables(){
+    return user_variables;
+}
 
 text_window_t* get_term_window(){
     return graphic_container;
@@ -48,11 +63,11 @@ void keypresscallback(struct keymap ch, uint8_t flag){
         current_command_lines=WText_printstring(graphic_container,current_command_line);
     } else if (ch.normal == ASCII_CR) {
         returnstruct_t* parsed=parse_command_line(current_command_line);
-        /*if(parsed->len>0){
-            execute_term_command(parsed->arr[0]);
-            WText_printstring(graphic_container,"\n>");
-        }*/
-       WText_printstring(graphic_container,"\n");
+        WText_printstring(graphic_container,"\n");
+        line_printed=1;
+        if(parsed->len==0){
+            WText_printstring(graphic_container,"0 0 ");
+        }
         for(uint8_t i=0;i<parsed->len;i++){
             execute_term_command(parsed->arr[i]);
         }
@@ -60,6 +75,7 @@ void keypresscallback(struct keymap ch, uint8_t flag){
         for(uint8_t i=0;i<=200;i++){
             current_command_line[i] = '\0';
         }
+        line_printed=0;
         current_command_lenght=0;
         current_command_lines=0;
     }else if(ch.special == KEYMAP_ALPHA || ch.special == 0){
@@ -89,6 +105,14 @@ void keypresscallback(struct keymap ch, uint8_t flag){
     //can_change_indicator=true;
 }
 
+char* Get_user_defined_variable(char* key){
+    return (char*)GObj_get(user_variables,key);
+}
+
+void Set_user_defined_variable(char* key,char* value){
+    GObj_set(user_variables,key,value);
+}
+
 bool Term_init(char *welcome_message){
     if(!Is_13h()){
         return false;
@@ -101,6 +125,7 @@ bool Term_init(char *welcome_message){
     if(!*welcome_message=='\0'){
         WText_printstring(graphic_container,welcome_message);
     }
+    user_variables=GObj_create();
     WText_printstring(graphic_container,">|");
     set_callback_tick(callback);
     set_callback_keyboard(keypresscallback);

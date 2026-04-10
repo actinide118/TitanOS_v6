@@ -1,6 +1,6 @@
 #include "./supplier.h"
 
-struct character characters[71]={{
+struct character characters[75]={{
     .letter = 'a',
     .graph =    {
         false,false,false,false,false,false,
@@ -1020,18 +1020,18 @@ struct character characters[71]={{
 },{
     .letter='&',
     .graph={
-        false,false,true,true,false,false,false,
-        false,true,false,false,true,false,false,
-        false,true,false,false,false,false,false,
-        false,false,true,false,false,true,false,
-        false,false,false,true,true,false,false,
-        false,false,true,false,false,true,false,
-        false,true,false,false,false,true,false,
-        false,false,true,true,true,false,false,
-        false,false,false,false,false,false,false,
-        false,false,false,false,false,false,false,
+        false,false,true,true,false,false,false,false,
+        false,true,false,false,true,false,false,false,
+        false,true,false,true,false,false,false,false,
+        false,false,true,false,false,false,false,false,
+        false,true,false,true,false,false,true,false,
+        false,true,false,false,true,true,false,false,
+        false,true,false,false,true,true,false,false,
+        false,false,true,true,false,false,true,false,
+        false,false,false,false,false,false,false,false,
+        false,false,false,false,false,false,false,false,
     },
-    .graph_width=7
+    .graph_width=8
 },{
     .letter=':',
     .graph={
@@ -1063,6 +1063,66 @@ struct character characters[71]={{
         false,false,false,
     },
     .graph_width=3,
+},{
+    .letter='$',
+    .graph={
+        false,false,false,true,false,false,false,
+        false,false,true,true,true,false,false,
+        false,true,false,true,false,false,false,
+        false,true,false,true,false,false,false,
+        false,false,true,true,true,false,false,
+        false,false,false,true,false,true,false,
+        false,true,false,true,false,true,false,
+        false,false,true,true,true,false,false,
+        false,false,false,true,false,false,false,
+        false,false,false,false,false,false,false,
+    },
+    .graph_width=7,
+},{
+    .letter='/',
+    .graph={
+        false,false,false,false,false,false,true,false,
+        false,false,false,false,false,false,true,false,
+        false,false,false,false,false,true,false,false,
+        false,false,false,false,true,false,false,false,
+        false,false,false,true,false,false,false,false,
+        false,false,true,false,false,false,false,false,
+        false,true,false,false,false,false,false,false,
+        false,true,false,false,false,false,false,false,
+        false,false,false,false,false,false,false,false,
+        false,false,false,false,false,false,false,false,
+    },
+    .graph_width=8,
+},{
+    .letter='\\',
+    .graph={
+        false,true,false,false,false,false,false,false,
+        false,true,false,false,false,false,false,false,
+        false,false,true,false,false,false,false,false,
+        false,false,false,true,false,false,false,false,
+        false,false,false,false,true,false,false,false,
+        false,false,false,false,false,true,false,false,
+        false,false,false,false,false,false,true,false,
+        false,false,false,false,false,false,true,false,
+        false,false,false,false,false,false,false,false,
+        false,false,false,false,false,false,false,false,
+    },
+    .graph_width=8,
+},{
+    .letter='=',
+    .graph={
+        false,false,false,false,false,false,
+        false,false,false,false,false,false,
+        false,false,false,false,false,false,
+        false,true,true,true,true,false,
+        false,false,false,false,false,false,
+        false,false,false,false,false,false,
+        false,true,true,true,true,false,
+        false,false,false,false,false,false,
+        false,false,false,false,false,false,
+        false,false,false,false,false,false,
+    },
+    .graph_width=6,
 }
 };
 
@@ -1085,7 +1145,7 @@ struct character default_out={
 
 character* get_character(char input){
     //character* characters = (character*) 0x5000;
-    for(int i=0; i<71; i++){
+    for(int i=0; i<75; i++){
         if(characters[i].letter == input){
             return &characters[i];
         }

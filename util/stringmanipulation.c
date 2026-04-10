@@ -32,3 +32,16 @@ void slice(char *strmere,char *strfille,uint32_t index,uint32_t len){
         strfille[i]=strmere[index+i];
     }
 }
+
+int indexOf(char* str,char ch){
+    int index=0;
+    while (*str)
+    {
+        if(*str==ch){
+            return index;
+        }
+        index++;
+        *str++;
+    }
+    return -1;
+}

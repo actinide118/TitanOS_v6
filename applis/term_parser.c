@@ -52,7 +52,6 @@ command_parsed_t* GObj_to_command_parsed(growing_obj_t* obj,uint8_t id){
 }
 
 returnstruct_t* GObj_to_return_struct(growing_obj_t* obj){
-    
     if(obj->key==NULL){
         returnstruct_t* rt=(returnstruct_t*)kmalloc(sizeof(returnstruct_t));
         rt->arr=NULL;
@@ -75,7 +74,6 @@ returnstruct_t* GObj_to_return_struct(growing_obj_t* obj){
     command_parsed_t** cmdarr=(command_parsed_t**)kmalloc(obj_len*sizeof(command_parsed_t*));
     returnstruct_t* cmds=(returnstruct_t*)kmalloc(sizeof(returnstruct_t));
     for(uint8_t i=0;i<obj_len;i++){
-        //printGObj(curr->value);
         cmdarr[i]=curr->value;
         curr=curr->next;
     }
@@ -105,7 +103,6 @@ returnstruct_t* parsing_error(char* str){
 
 returnstruct_t* parse_command_line(char* command_line){
     if(command_line[0]=='\0'){
-        //WText_printstring(get_term_window(),"\n>");
         returnstruct_t* arr=(returnstruct_t*)kmalloc(sizeof(returnstruct_t));
         arr->len=0;
         return arr;
@@ -117,7 +114,7 @@ returnstruct_t* parse_command_line(char* command_line){
         err->commande="echolor";
         err->id=0;
         char** arg=(char**)kmalloc(sizeof(char**)*3);
-        arg[0]="ERR: input must start with an alphabetic character";
+        arg[0]="ERR: input must start with an alphabetic character\n";
         arg[1]="4";
         arg[2]="0";
         err->args=arg;
@@ -141,40 +138,35 @@ returnstruct_t* parse_command_line(char* command_line){
     while(!isfinished){
         if(command_line[index]=='\0'){
             if(is_single_quoted||is_double_quoted){
-                return parsing_error("ERR: string is not finished");
+                return parsing_error("ERR: string is not finished \n");
             }
             isfinished=true;
-            if(command_line[index-1]=='"'||command_line[index-1]=='\''){
-               uint32_t len=index-index_since_block_start-2;
-                char* strbuf=kmalloc((len+1)*sizeof(char));
-                slice(command_line,strbuf,index_since_block_start+1,len);
-                char* buf=kmalloc(3*sizeof(char));
-                uint8_to_string(index_curr_cmd_arr,buf);
-                GObj_set(curr_cmd,buf,strbuf); 
-            }else{
+            if(command_line[index-1]!=' '){
+            
                 uint32_t len=index-index_since_block_start;
                 char* strbuf=kmalloc((len+1)*sizeof(char));
                 slice(command_line,strbuf,index_since_block_start,len);
                 char* buf=kmalloc(3*sizeof(char));
                 uint8_to_string(index_curr_cmd_arr,buf);
                 GObj_set(curr_cmd,buf,strbuf);
-                command_parsed_t* cmd=GObj_to_command_parsed(curr_cmd,0);
-                //char* strbuf=(char*)kmalloc(3*sizeof(char));
-                uint8_to_string(index_command_arr,buf);
-                GObj_set(commandes,buf,cmd);
-                //curr_cmd=GObj_create();
-                index_command_arr++;
             }
+            char* strbuf=(char*)kmalloc(3*sizeof(char));
+            uint8_to_string(index_command_arr,strbuf);
+            command_parsed_t* cmd=GObj_to_command_parsed(curr_cmd,0);
+            uint8_to_string(index_command_arr,strbuf);
+            GObj_set(commandes,strbuf,cmd);
+
+            
             index_curr_cmd_arr++;
-            index_since_block_start=index+1;
         }
         if(command_line[index]=='"'){
+            //WText_printstring(get_term_window(),"\" encounter\n");
             if(is_single_quoted){
                 index++;
                 continue;
             }
-            if(!(is_double_quoted||is_single_quoted)&&command_line[index-1]!=' '){
-               return parsing_error("ERR quote must be used after a space");
+            if(!(is_double_quoted||is_single_quoted)&&(command_line[index-1]!=' '&&command_line[index-1]!='=')){
+               return parsing_error("ERR quote must be used after a space or =\n");
             }
             is_double_quoted=!is_double_quoted;
         }else if(command_line[index]=='\''){
@@ -183,7 +175,7 @@ returnstruct_t* parse_command_line(char* command_line){
                 continue;
             }
             if(!(is_double_quoted||is_single_quoted)&&command_line[index-1]!=' '){
-               return parsing_error("ERR quote must be used after a space");
+               return parsing_error("ERR quote must be used after a space\n");
             }
             is_single_quoted=!is_single_quoted;
         }else if(command_line[index]==' '){
@@ -191,34 +183,32 @@ returnstruct_t* parse_command_line(char* command_line){
                 index++;
                 continue;
             }
-            if(command_line[index-1]=='"'||command_line[index-1]=='\''){
-               uint32_t len=index-index_since_block_start-2;
-                char* strbuf=kmalloc((len+1)*sizeof(char));
-                slice(command_line,strbuf,index_since_block_start+1,len);
-                char* buf=kmalloc(3*sizeof(char));
-                uint8_to_string(index_curr_cmd_arr,buf);
-                GObj_set(curr_cmd,buf,strbuf); 
-            }else{
-                uint32_t len=index-index_since_block_start;
-                char* strbuf=kmalloc((len+1)*sizeof(char));
-                slice(command_line,strbuf,index_since_block_start,len);
-                char* buf=kmalloc(3*sizeof(char));
-                uint8_to_string(index_curr_cmd_arr,buf);
-                GObj_set(curr_cmd,buf,strbuf);
+            if(command_line[index-1]==' '){
+                index++;
+                index_since_block_start++;
+                continue;
             }
+
+            uint32_t len=index-index_since_block_start;
+            char* strbuf=kmalloc((len+1)*sizeof(char));
+            slice(command_line,strbuf,index_since_block_start,len);
+            char* buf=kmalloc(3*sizeof(char));
+            uint8_to_string(index_curr_cmd_arr,buf);
+            GObj_set(curr_cmd,buf,strbuf);
+            
             index_curr_cmd_arr++;
             index_since_block_start=index+1;
-        }else if(command_line[index]=='$'){
+        }else if(command_line[index]=='&'){
             if(is_double_quoted||is_single_quoted){
                 index++;
                 continue;
             }
-            if(command_line[index+1]=='$'){
+            if(command_line[index+1]=='&'){
                 if(command_line[index-1]!=' '){
-                    return parsing_error("ERR: $$ must be preceeded by a space");
+                    return parsing_error("ERR: && must be preceeded by a space\n");
                 }
                 if(command_line[index+2]!=' '){
-                    return parsing_error("ERR: $$ must be followed by a space");
+                    return parsing_error("ERR: && must be followed by a space\n");
                 }
                 command_parsed_t* cmd=GObj_to_command_parsed(curr_cmd,0);
                 char* strbuf=(char*)kmalloc(3*sizeof(char));
