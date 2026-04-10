@@ -48,13 +48,15 @@ void keypresscallback(struct keymap ch, uint8_t flag){
         current_command_lines=WText_printstring(graphic_container,current_command_line);
     } else if (ch.normal == ASCII_CR) {
         returnstruct_t* parsed=parse_command_line(current_command_line);
-        if(parsed->len>0){
+        /*if(parsed->len>0){
             execute_term_command(parsed->arr[0]);
             WText_printstring(graphic_container,"\n>");
+        }*/
+       WText_printstring(graphic_container,"\n");
+        for(uint8_t i=0;i<parsed->len;i++){
+            execute_term_command(parsed->arr[i]);
         }
-        //char* result[10];
-        //int count = split(key_buffer, ' ', result, 10);
-        //bool disable = execute_command(result);
+        WText_printstring(graphic_container,">");
         for(uint8_t i=0;i<=200;i++){
             current_command_line[i] = '\0';
         }

@@ -14,7 +14,7 @@ void echolor(char *str,uint8_t foreground,uint8_t background){
     }else{
         ibackground=background;
     }
-    WText_printstring(get_term_window(),"\n");
+    //WText_printstring(get_term_window(),"\n");
     WText_printstring_color(get_term_window(),str,iforeground,ibackground);
 }
 
@@ -27,7 +27,7 @@ void execute_term_command(command_parsed_t* command){
             WText_printstring(get_term_window(),buf);
             return;
         }
-        WText_printstring(get_term_window(),"\n");
+        //WText_printstring(get_term_window(),"\n");
         WText_printstring(get_term_window(),command->args[0]);
     }else if(strcmp(command->commande,"echolor")==0){
         if(command->argslen!=3){
@@ -38,6 +38,8 @@ void execute_term_command(command_parsed_t* command){
             return;
         }
         echolor(command->args[0],string_to_uint8(command->args[1]),string_to_uint8(command->args[2]));
+    }else if(strcmp(command->commande,"clear")==0){
+        WText_clear(get_term_window());
     }
 }
 

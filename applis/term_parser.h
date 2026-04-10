@@ -3,8 +3,6 @@
 typedef struct cmd{
     char* commande;
     uint8_t id;
-    uint8_t dependencie;
-    uint8_t dependonhim;
     uint8_t argslen;
     char** args;
 

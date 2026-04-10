@@ -26,7 +26,7 @@ bool create_window(struct window* fenetre){// The six first fields of the struct
     set_background(fenetre->color_border);
     set_foreground(fenetre->color_title);
     M13h_print_string(fenetre->title);
-    M13h_draw_rectangle(fenetre->usable_left,fenetre->usable_top,fenetre->usable_width,fenetre->usable_height+2,fenetre->color_intern);
+    M13h_draw_rectangle(fenetre->usable_left,fenetre->usable_top,fenetre->usable_width,fenetre->usable_height,fenetre->color_intern);
     set_row(row);
     set_col(col);
     set_background(background);
@@ -39,13 +39,13 @@ void del_window(struct window* fenetre){
 }
 
 void W_scroll(struct window* fenetre,int ln){
-    for(int i=0;i<fenetre->usable_height-ln;i++){
+    for(int i=0;i<=fenetre->usable_height-ln;i++){
         for(int j=0;j<fenetre->usable_width;j++){
             uint8_t color=M13h_get_pixel(fenetre->usable_left+j,fenetre->usable_top+i+ln);
             M13h_set_pixel(fenetre->usable_left+j,fenetre->usable_top+i,(int)color);
         }
     }
-    M13h_draw_rectangle(fenetre->usable_left,fenetre->usable_top+fenetre->usable_height-ln+2,fenetre->usable_width,ln,(int)fenetre->color_intern);
+    M13h_draw_rectangle(fenetre->usable_left,fenetre->usable_top+fenetre->usable_height-ln,fenetre->usable_width,ln,(int)fenetre->color_intern);
 }
 
 void W_clear(struct window* fenetre){

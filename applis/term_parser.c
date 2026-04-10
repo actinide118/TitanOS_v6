@@ -6,37 +6,6 @@
 #include "../util/growing_obj.h"
 #include "../util/util.h"
 
-command_parsed_t* GObj_to_command_parsed(growing_obj_t* obj,uint8_t id,uint8_t after,uint8_t before){
-    command_parsed_t* command=(command_parsed_t*)kmalloc(sizeof(command_parsed_t));
-    command->commande=obj->value;
-    command->dependencie=after;
-    command->dependonhim=before;
-    if(obj->next==NULL){
-        command->args=NULL;
-        command->argslen=0;  
-    }
-    bool isfinished=false;
-    uint8_t args_len=0;
-    growing_obj_t* curr=obj->next;
-    while(!isfinished){
-        args_len++;
-        //WText_printstring(get_term_window(),"f");
-        if(curr->next==NULL){
-            isfinished=true;
-            break;
-        }
-        curr=curr->next;
-    }
-    curr=obj->next;
-    command->args=(char**)kmalloc(args_len*sizeof(char*));
-    command->argslen=args_len;
-    for(uint8_t i=0;i<args_len;i++){
-        command->args[i]=curr->value;
-        curr=curr->next;
-    }
-    return command;
-}
-
 void printGObj(growing_obj_t* obj){
     growing_obj_t* curr=obj;
     bool is_finished=false;
@@ -53,14 +22,75 @@ void printGObj(growing_obj_t* obj){
     }
 }
 
+command_parsed_t* GObj_to_command_parsed(growing_obj_t* obj,uint8_t id){
+    command_parsed_t* command=(command_parsed_t*)kmalloc(sizeof(command_parsed_t));
+    command->commande=obj->value;
+    if(obj->next==NULL){
+        command->args=NULL;
+        command->argslen=0;  
+        return command;
+    }
+    bool isfinished=false;
+    uint8_t args_len=0;
+    growing_obj_t* curr=obj->next;
+    while(!isfinished){
+        args_len++;
+        if(curr->next==NULL){
+            isfinished=true;
+            break;
+        }
+        curr=curr->next;
+    }
+    curr=obj->next;
+    command->args=(char**)kmalloc(args_len*sizeof(char*));
+    command->argslen=args_len;
+    for(uint8_t i=0;i<args_len;i++){
+        command->args[i]=curr->value;
+        curr=curr->next;
+    }
+    return command;
+}
+
+returnstruct_t* GObj_to_return_struct(growing_obj_t* obj){
+    
+    if(obj->key==NULL){
+        returnstruct_t* rt=(returnstruct_t*)kmalloc(sizeof(returnstruct_t));
+        rt->arr=NULL;
+        rt->len=0;
+        return rt;
+    }
+    uint8_t obj_len=0;
+    bool is_finished=false;
+    growing_obj_t* curr = obj;
+    while (!is_finished)
+    {
+        obj_len++;
+        if(curr->next != NULL){
+            curr = curr->next;
+        }else{
+            is_finished=true;
+        }
+    }
+    curr=obj;
+    command_parsed_t** cmdarr=(command_parsed_t**)kmalloc(obj_len*sizeof(command_parsed_t*));
+    returnstruct_t* cmds=(returnstruct_t*)kmalloc(sizeof(returnstruct_t));
+    for(uint8_t i=0;i<obj_len;i++){
+        //printGObj(curr->value);
+        cmdarr[i]=curr->value;
+        curr=curr->next;
+    }
+    cmds->arr=cmdarr;
+    cmds->len=obj_len;
+}
+
+
+
 returnstruct_t* parsing_error(char* str){
         command_parsed_t* err=(command_parsed_t*)kmalloc(sizeof(command_parsed_t));
         command_parsed_t** errarr=(command_parsed_t**)kmalloc(sizeof(command_parsed_t*));
         returnstruct_t* arr=(returnstruct_t*)kmalloc(sizeof(returnstruct_t));
         err->commande="echolor";
         err->id=0;
-        err->dependencie=0;
-        err->dependonhim=0;
         char** arg=(char**)kmalloc(sizeof(char**)*3);
         arg[0]=str;
         arg[1]="4";
@@ -75,7 +105,7 @@ returnstruct_t* parsing_error(char* str){
 
 returnstruct_t* parse_command_line(char* command_line){
     if(command_line[0]=='\0'){
-        WText_printstring(get_term_window(),"\n>");
+        //WText_printstring(get_term_window(),"\n>");
         returnstruct_t* arr=(returnstruct_t*)kmalloc(sizeof(returnstruct_t));
         arr->len=0;
         return arr;
@@ -86,10 +116,8 @@ returnstruct_t* parse_command_line(char* command_line){
         returnstruct_t* arr=(returnstruct_t*)kmalloc(sizeof(returnstruct_t));
         err->commande="echolor";
         err->id=0;
-        err->dependencie=0;
-        err->dependonhim=0;
         char** arg=(char**)kmalloc(sizeof(char**)*3);
-        arg[0]="ERR input must start with an alphabetic character";
+        arg[0]="ERR: input must start with an alphabetic character";
         arg[1]="4";
         arg[2]="0";
         err->args=arg;
@@ -113,24 +141,7 @@ returnstruct_t* parse_command_line(char* command_line){
     while(!isfinished){
         if(command_line[index]=='\0'){
             if(is_single_quoted||is_double_quoted){
-                isfinished=true;
-                command_parsed_t* err=(command_parsed_t*)kmalloc(sizeof(command_parsed_t));
-                command_parsed_t** errarr=(command_parsed_t**)kmalloc(sizeof(command_parsed_t*));
-                returnstruct_t* arr=(returnstruct_t*)kmalloc(sizeof(returnstruct_t));
-                err->commande="echolor";
-                err->id=0;
-                err->dependencie=0;
-                err->dependonhim=0;
-                char** arg=(char**)kmalloc(sizeof(char**)*3);
-                arg[0]="ERR string not closed";
-                arg[1]="4";
-                arg[2]="0";
-                err->args=arg;
-                err->argslen=3;
-                arr->len=1;
-                errarr[0]=err;
-                arr->arr=errarr;
-                return arr;
+                return parsing_error("ERR: string is not finished");
             }
             isfinished=true;
             if(command_line[index-1]=='"'||command_line[index-1]=='\''){
@@ -147,6 +158,12 @@ returnstruct_t* parse_command_line(char* command_line){
                 char* buf=kmalloc(3*sizeof(char));
                 uint8_to_string(index_curr_cmd_arr,buf);
                 GObj_set(curr_cmd,buf,strbuf);
+                command_parsed_t* cmd=GObj_to_command_parsed(curr_cmd,0);
+                //char* strbuf=(char*)kmalloc(3*sizeof(char));
+                uint8_to_string(index_command_arr,buf);
+                GObj_set(commandes,buf,cmd);
+                //curr_cmd=GObj_create();
+                index_command_arr++;
             }
             index_curr_cmd_arr++;
             index_since_block_start=index+1;
@@ -191,15 +208,45 @@ returnstruct_t* parse_command_line(char* command_line){
             }
             index_curr_cmd_arr++;
             index_since_block_start=index+1;
+        }else if(command_line[index]=='$'){
+            if(is_double_quoted||is_single_quoted){
+                index++;
+                continue;
+            }
+            if(command_line[index+1]=='$'){
+                if(command_line[index-1]!=' '){
+                    return parsing_error("ERR: $$ must be preceeded by a space");
+                }
+                if(command_line[index+2]!=' '){
+                    return parsing_error("ERR: $$ must be followed by a space");
+                }
+                command_parsed_t* cmd=GObj_to_command_parsed(curr_cmd,0);
+                char* strbuf=(char*)kmalloc(3*sizeof(char));
+                uint8_to_string(index_command_arr,strbuf);
+                GObj_set(commandes,strbuf,cmd);
+                curr_cmd=GObj_create();
+                index_curr_cmd_arr=0;
+                index_command_arr++;
+                index+=3;
+                index_since_block_start+=3;
+                continue;
+            }
         }
         index++;
     }
-    //printGObj(curr_cmd);
-    command_parsed_t* cmd=GObj_to_command_parsed(curr_cmd,0,0,0);
+    /*printGObj(commandes);
+    WText_printstring(get_term_window(),"\n>");
+        returnstruct_t* arr=(returnstruct_t*)kmalloc(sizeof(returnstruct_t));
+        arr->len=0;
+        return arr;
+    
+    command_parsed_t* cmd=GObj_to_command_parsed(curr_cmd,0);
     command_parsed_t** cmdarr=(command_parsed_t**)kmalloc(sizeof(command_parsed_t*));
     returnstruct_t* cmds=(returnstruct_t*)kmalloc(sizeof(returnstruct_t));
     cmdarr[0]=cmd;
     cmds->arr=cmdarr;
     cmds->len=1;
     return cmds;
+    */
+   return GObj_to_return_struct(commandes);
 }

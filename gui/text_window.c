@@ -24,7 +24,7 @@ text_window_t* WText_create_window(uint16_t usable_height, uint16_t usable_width
 
 bool Intern_WText_putchar(text_window_t *window,char ch){
     if(ch=='\n'){
-        if(window->curr_row+10>=window->fenetre->usable_height){
+        if(window->curr_row+20>window->fenetre->usable_height){
             W_scroll(window->fenetre,10);
             window->curr_col=0;
         }else{
@@ -78,7 +78,7 @@ void WText_erase_last_char(text_window_t* window){
 
 bool Intern_WText_putchar_color(text_window_t *window,char ch,uint8_t foreground,uint8_t background){
     if(ch=='\n'){
-        if(window->curr_row+10>=window->fenetre->usable_height){
+        if(window->curr_row+10>window->fenetre->usable_height){
             W_scroll(window->fenetre,10);
             window->curr_col=0;
         }else{
@@ -114,4 +114,10 @@ uint8_t WText_printstring_color(text_window_t *window,char* string,uint8_t foreg
         *string++;
     }
     return chgmt;
+}
+
+void WText_clear(text_window_t* window){
+    M13h_draw_rectangle(window->fenetre->usable_left,window->fenetre->usable_top,window->fenetre->usable_width,window->fenetre->usable_height,window->fenetre->color_intern);
+    window->curr_col=0;
+    window->curr_row=0;
 }
