@@ -14,3 +14,5 @@ typedef struct returnstruct{
 }returnstruct_t;
 
 returnstruct_t* parse_command_line(char* command_line);
+void free_command_parsed(command_parsed_t* command_parsed );
+void free_return_struct(returnstruct_t* parsed_cmd);

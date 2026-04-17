@@ -66,15 +66,18 @@ void keypresscallback(struct keymap ch, uint8_t flag){
         WText_printstring(graphic_container,"\n");
         line_printed=1;
         if(parsed->len==0){
-            WText_printstring(graphic_container,"0 0 ");
+           // WText_printstring(graphic_container,"0 0 ");
         }
         for(uint8_t i=0;i<parsed->len;i++){
             execute_term_command(parsed->arr[i]);
         }
+        
         WText_printstring(graphic_container,">");
         for(uint8_t i=0;i<=200;i++){
             current_command_line[i] = '\0';
         }
+        
+        free_return_struct(parsed);
         line_printed=0;
         current_command_lenght=0;
         current_command_lines=0;

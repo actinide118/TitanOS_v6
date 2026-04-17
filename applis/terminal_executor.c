@@ -9,7 +9,8 @@ char* prepstring(char* str){
         len++;
         *cp++;
     }
-    //WText_printstring(get_term_window(),"prepstring");
+    /*WText_printstring_color(get_term_window(),str,3,0);
+    WText_printstring(get_term_window(),"prepstring\n");*/
     if(str[0]=='$'){
         cp=kmalloc(len*sizeof(char));
         slice(str,cp,1,len-1);

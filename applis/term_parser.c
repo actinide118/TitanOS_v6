@@ -23,8 +23,13 @@ void printGObj(growing_obj_t* obj){
 }
 
 command_parsed_t* GObj_to_command_parsed(growing_obj_t* obj,uint8_t id){
+    int len;
     command_parsed_t* command=(command_parsed_t*)kmalloc(sizeof(command_parsed_t));
-    command->commande=obj->value;
+    len=strlen(obj->value);
+    char* copy = kmalloc((len+1)*sizeof(char));
+    slice(obj->value,copy,0,len);
+    copy[len]='\0';
+    command->commande=copy;
     if(obj->next==NULL){
         command->args=NULL;
         command->argslen=0;  
@@ -45,7 +50,11 @@ command_parsed_t* GObj_to_command_parsed(growing_obj_t* obj,uint8_t id){
     command->args=(char**)kmalloc(args_len*sizeof(char*));
     command->argslen=args_len;
     for(uint8_t i=0;i<args_len;i++){
-        command->args[i]=curr->value;
+        len=strlen(curr->value);
+        char* copy = kmalloc((len+1)*sizeof(char));
+        slice(curr->value,copy,0,len);
+        copy[len]='\0';
+        command->args[i]=copy;
         curr=curr->next;
     }
     return command;
@@ -79,8 +88,25 @@ returnstruct_t* GObj_to_return_struct(growing_obj_t* obj){
     }
     cmds->arr=cmdarr;
     cmds->len=obj_len;
+    return cmds;
 }
 
+void free_command_parsed(command_parsed_t* command_parsed ){
+    //free(command_parsed->commande);
+    for(uint8_t i=0;i<command_parsed->argslen;i++){
+        //free(command_parsed->args[i]);
+    }
+    //free(command_parsed->args);
+    //free(command_parsed);
+}
+
+void free_return_struct(returnstruct_t* parsed_cmd){
+    for (uint8_t i=0;i<parsed_cmd->len;i++){
+        free_command_parsed(parsed_cmd->arr[i]);
+    }
+    //free(parsed_cmd->arr);
+    //free(parsed_cmd);
+}
 
 
 returnstruct_t* parsing_error(char* str){
@@ -146,6 +172,7 @@ returnstruct_t* parse_command_line(char* command_line){
                 uint32_t len=index-index_since_block_start;
                 char* strbuf=kmalloc((len+1)*sizeof(char));
                 slice(command_line,strbuf,index_since_block_start,len);
+                strbuf[len]='\0';
                 char* buf=kmalloc(3*sizeof(char));
                 uint8_to_string(index_curr_cmd_arr,buf);
                 GObj_set(curr_cmd,buf,strbuf);
@@ -155,7 +182,7 @@ returnstruct_t* parse_command_line(char* command_line){
             command_parsed_t* cmd=GObj_to_command_parsed(curr_cmd,0);
             uint8_to_string(index_command_arr,strbuf);
             GObj_set(commandes,strbuf,cmd);
-
+            //GObj_clear(curr_cmd);
             
             index_curr_cmd_arr++;
         }
@@ -192,6 +219,7 @@ returnstruct_t* parse_command_line(char* command_line){
             uint32_t len=index-index_since_block_start;
             char* strbuf=kmalloc((len+1)*sizeof(char));
             slice(command_line,strbuf,index_since_block_start,len);
+            strbuf[len]='\0';
             char* buf=kmalloc(3*sizeof(char));
             uint8_to_string(index_curr_cmd_arr,buf);
             GObj_set(curr_cmd,buf,strbuf);
@@ -214,6 +242,7 @@ returnstruct_t* parse_command_line(char* command_line){
                 char* strbuf=(char*)kmalloc(3*sizeof(char));
                 uint8_to_string(index_command_arr,strbuf);
                 GObj_set(commandes,strbuf,cmd);
+                //GObj_clear(curr_cmd);
                 curr_cmd=GObj_create();
                 index_curr_cmd_arr=0;
                 index_command_arr++;
@@ -238,5 +267,7 @@ returnstruct_t* parse_command_line(char* command_line){
     cmds->len=1;
     return cmds;
     */
-   return GObj_to_return_struct(commandes);
+   returnstruct_t* rt=GObj_to_return_struct(commandes);
+   //GObj_free(commandes);
+   return rt;
 }

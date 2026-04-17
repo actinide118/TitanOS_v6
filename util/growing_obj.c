@@ -94,3 +94,26 @@ void GObj_delete(growing_obj_t* obj,char* key){
         }
     }
 }
+
+void GObj_free(growing_obj_t* obj){
+    growing_obj_t* curr=obj;
+    growing_obj_t* next;
+    while(curr->next!=NULL){
+        next=curr->next;
+        free(curr);
+        curr=next;
+    }
+}
+
+void GObj_clear(growing_obj_t* obj){
+    growing_obj_t* curr=obj;
+    growing_obj_t* next;
+    while(curr->next!=NULL){
+        next=curr->next;
+        //free(curr->key);
+        //print_string(curr->key);
+        free(curr->value);
+        free(curr);
+        curr=next;
+    }
+}
