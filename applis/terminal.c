@@ -7,6 +7,7 @@ uint8_t current_command_lenght=0;
 uint8_t current_command_lines=1;
 bool indicator_on=true;
 bool can_change_indicator=true;
+bool disabled=false;
 growing_obj_t* strbuf;
 int line_printed=0;
 growing_obj_t* user_variables;
@@ -46,6 +47,15 @@ void callback(uint32_t nb){
     }
 }
 
+void disable_cursor(void){
+    if(indicator_on){
+        WText_erase_last_char(graphic_container);
+        indicator_on=false;
+    }
+    can_change_indicator=false;
+    disabled=true;
+}
+
 void keypresscallback(struct keymap ch, uint8_t flag){
     //can_change_indicator=false;
     if(indicator_on){
@@ -59,8 +69,9 @@ void keypresscallback(struct keymap ch, uint8_t flag){
         for(uint8_t i=0;i<=current_command_lines;i++){
             WText_erase_last_line(graphic_container);
         }
-        WText_printstring(graphic_container,">");
+        if(!disabled){ WText_printstring(graphic_container,">");
         current_command_lines=WText_printstring(graphic_container,current_command_line);
+        }
     } else if (ch.normal == ASCII_CR) {
         returnstruct_t* parsed=parse_command_line(current_command_line);
         WText_printstring(graphic_container,"\n");
@@ -72,7 +83,7 @@ void keypresscallback(struct keymap ch, uint8_t flag){
             execute_term_command(parsed->arr[i]);
         }
         
-        WText_printstring(graphic_container,">");
+        if(!disabled) WText_printstring(graphic_container,">");
         for(uint8_t i=0;i<=200;i++){
             current_command_line[i] = '\0';
         }
@@ -86,7 +97,7 @@ void keypresscallback(struct keymap ch, uint8_t flag){
     	uint8_t alt = (flag & MASK_ALT) ? 1 : 0;
     	uint8_t ctrl = (flag & MASK_CTRL) ? 1 : 0;
     	uint8_t capslock = (flag & MASK_CAPSLOCK) ? 1 : 0;
-    	uint8_t numlock = (flag & MASK_NUMLOCK) ? 1 : 0;
+    	uint8_t numlock= (flag & MASK_NUMLOCK) ? 1 : 0;
 
         char letter;
 
@@ -133,4 +144,11 @@ bool Term_init(char *welcome_message){
     set_callback_tick(callback);
     set_callback_keyboard(keypresscallback);
     return true;
+}
+
+void Term_ret(uint8_t code){
+    WText_printstring(graphic_container,">|");
+    set_callback_tick(callback);
+    set_callback_keyboard(keypresscallback); 
+    disabled=false;
 }

@@ -1,6 +1,7 @@
 #include "terminal_executor.h"
 #include "../util/util.h"
 #include "../util/stringmanipulation.h"
+#include "../snake/main.h"
 
 char* prepstring(char* str){
     int len=0;
@@ -116,6 +117,8 @@ void execute_term_command(command_parsed_t* command){
         echolor(command->args[0],string_to_uint8(command->args[1]),string_to_uint8(command->args[2]));
     }else if(strcmp(command->commande,"clear")==0){
         WText_clear(get_term_window());
+    }else if(strcmp(command->commande,"snake")==0){
+        Snake_init();
     }
 }
 

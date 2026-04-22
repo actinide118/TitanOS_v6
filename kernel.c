@@ -40,6 +40,16 @@ void display_sector(uint16_t* sector_data, size_t length) {
     }
 }
 
+uint32_t get_seed(){
+    if(seed == 0){
+            seed = get_tick();
+    }
+    return seed;
+}
+void set_seed(uint32_t value){
+    seed=value;
+}
+
 void start_kernel (){
     isr_install();
     irq_install();
@@ -125,7 +135,7 @@ bool execute_command(char* string[]){
         if(seed == 0){
             seed = get_tick();
         }
-        random(&seed);
+        random(seed);
         char buf[10];
         uint32_to_string(seed, buf);
         print_string(buf);
