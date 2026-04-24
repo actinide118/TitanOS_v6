@@ -9,8 +9,8 @@
 #include "sprite_supplier.h"
 
 uint8_t tab[77]={
-    4,4,4,4,4,2,4,4,4,4,4,
-    4,4,4,4,2,2,2,4,4,4,4,
+    2,2,4,4,4,2,4,4,4,4,4,
+    2,2,4,4,2,2,2,4,4,4,4,
     4,4,2,2,4,2,4,2,2,4,4,
     4,2,2,4,4,2,4,4,2,2,4,
     2,2,4,4,4,2,4,4,4,2,2,
@@ -30,11 +30,12 @@ void clback(uint32_t tick){
     if(!(tick%10==0)){
         return;
     }
+    fonction_transition(&sprite,3,crindex,30,10);
     /*fonction_transition(get_sprite(EMPTY_CASE),0,crindex,10,10);
-    fonction_transition(&sprite,1,crindex,30,10);
-    fonction_transition(&sprite,2,crindex,70,10);
-    fonction_transition(&sprite,3,crindex,90,10);
-    crindex++;*/
+    fonction_line_by_line(&sprite,1,crindex,30,10);
+    fonction_line_by_line(&sprite,2,crindex,70,10);
+    fonction_line_by_line(&sprite,3,crindex,90,10);*/
+    crindex++;
 }
 
 void init_board(){
