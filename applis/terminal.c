@@ -146,9 +146,11 @@ bool Term_init(char *welcome_message){
     return true;
 }
 
-void Term_ret(uint8_t code){
-    WText_printstring(graphic_container,">|");
+void Term_ret(uint8_t code, char* message){
+    WText_clear(graphic_container);
+    WText_printstring(graphic_container,message);
     set_callback_tick(callback);
     set_callback_keyboard(keypresscallback); 
+    WText_printstring(graphic_container,">|");
     disabled=false;
 }

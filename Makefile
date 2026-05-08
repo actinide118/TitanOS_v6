@@ -8,6 +8,7 @@ UTILS := $(patsubst ./util/%.c, ./bin/%.o, $(wildcard ./util/*.c))
 DRIVERS := $(patsubst ./driver/%.c, ./bin/%.o, $(wildcard ./driver/*.c))
 GUI := $(patsubst ./gui/%.c, ./bin/%.o, $(wildcard ./gui/*.c))
 SNAKE := $(patsubst ./snake/%.c, ./bin/%.o, $(wildcard ./snake/*.c))
+2048 := $(patsubst ./2048/%.c, ./bin/%.o, $(wildcard ./2048/*.c))
 
 ./bin/%.o: ./cpu/%.c
 	gcc -ffreestanding -m32 -fno-pie -fno-stack-protector -c $< -o $@
@@ -31,6 +32,9 @@ SNAKE := $(patsubst ./snake/%.c, ./bin/%.o, $(wildcard ./snake/*.c))
 ./bin/%.o: ./snake/%.c
 	gcc -ffreestanding -m32 -fno-pie -fno-stack-protector -c $< -o $@
 
+./bin/%.o: ./2048/%.c
+	gcc -ffreestanding -m32 -fno-pie -fno-stack-protector -c $< -o $@
+
 ./bin/Cloader.o: Cloader.asm
 	nasm Cloader.asm -f elf -o bin/Cloader.o
 
@@ -46,7 +50,7 @@ SNAKE := $(patsubst ./snake/%.c, ./bin/%.o, $(wildcard ./snake/*.c))
 ./bin/supplier.o: ./writing/supplier.c
 	gcc -ffreestanding -m32 -fno-pie -fno-stack-protector -c $< -o $@
 
-./bin/kernel.bin: ./bin/Cloader.o ./bin/interrupt.o ./bin/evt.o ./bin/2GRTOS.o ./bin/kernel.o ./bin/supplier.o $(CPU_OBJS) $(APPLIS) $(UTILS) $(DRIVERS) $(GUI) $(SNAKE)
+./bin/kernel.bin: ./bin/Cloader.o ./bin/interrupt.o ./bin/evt.o ./bin/2GRTOS.o ./bin/kernel.o ./bin/supplier.o $(CPU_OBJS) $(APPLIS) $(UTILS) $(DRIVERS) $(GUI) $(SNAKE) $(2048)
 	ld -o $@ -Ttext 0x8000 $^ --oformat binary -m elf_i386
 
 ./bin/boot.bin:

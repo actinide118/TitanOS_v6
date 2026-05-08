@@ -14,5 +14,5 @@ int* get_line_printed();
 growing_obj_t* get_user_variables();
 char* Get_user_defined_variable(char* key);
 void Set_user_defined_variable(char* key,char* value);
-void Term_ret(uint8_t code);
+void Term_ret(uint8_t code, char* message);
 void disable_cursor(void);

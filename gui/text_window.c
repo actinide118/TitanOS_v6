@@ -118,6 +118,20 @@ uint8_t WText_printstring_color(text_window_t *window,char* string,uint8_t foreg
 
 void WText_clear(text_window_t* window){
     M13h_draw_rectangle(window->fenetre->usable_left,window->fenetre->usable_top,window->fenetre->usable_width,window->fenetre->usable_height,window->fenetre->color_intern);
+    M13h_draw_rectangle(window->fenetre->left,window->fenetre->top,window->fenetre->width,10,window->fenetre->color_border);
+    M13h_draw_rectangle(window->fenetre->left,window->fenetre->top,4,window->fenetre->height,window->fenetre->color_border);
+    M13h_draw_rectangle(window->fenetre->left,window->fenetre->top+window->fenetre->height-4,window->fenetre->width,4,window->fenetre->color_border);
+    M13h_draw_rectangle(window->fenetre->left+window->fenetre->width-4,window->fenetre->top,4,window->fenetre->height,window->fenetre->color_border);
+    uint16_t row = get_row();
+    uint16_t col = get_col();
+    set_row(window->fenetre->top);
+    set_col(window->fenetre->left+4);
+    uint8_t background = get_background();
+    uint8_t foreground = get_foreground();
+    set_background(window->fenetre->color_border);
+    set_foreground(window->fenetre->color_title);
+    M13h_print_string(window->fenetre->title);
+    M13h_draw_rectangle(window->fenetre->usable_left,window->fenetre->usable_top,window->fenetre->usable_width,window->fenetre->usable_height,window->fenetre->color_intern);
     window->curr_col=0;
     window->curr_row=0;
 }
