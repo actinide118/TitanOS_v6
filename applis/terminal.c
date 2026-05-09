@@ -55,6 +55,14 @@ void disable_cursor(void){
     can_change_indicator=false;
     disabled=true;
 }
+void enable_cursor(void){
+    can_change_indicator=true;
+    disabled=false;
+    if(!indicator_on){
+        WText_printstring(graphic_container,"|");
+        indicator_on=true;
+    }
+}
 
 void keypresscallback(struct keymap ch, uint8_t flag){
     //can_change_indicator=false;

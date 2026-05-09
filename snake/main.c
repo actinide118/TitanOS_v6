@@ -87,6 +87,7 @@ void Snake_end(){
     buf[5]=':';
     buf[6]=' ';
     uint16_to_string(snake_size-1,buf+7);
+    enable_cursor();
     Term_ret(0, buf);
 }
 
