@@ -1,5 +1,6 @@
 #include "memory.h"
 #include "../util/util.h"
+#include "vga.h"
 
 
 void init_struct(void){
@@ -11,6 +12,13 @@ void *crawl(uint32_t adress){
     uint32_t i_adress=adress;
     struct memory_block* current_block=(struct memory_block* )adress;
     while(true){
+        if(current_block->magic_value!=FREE&&current_block->magic_value!=USED){
+            print_string("Memory corruption detected at address : ");
+            char buffer[10];
+            uint32_to_string(i_adress,buffer);
+            print_string(buffer);
+            return 0;
+        }
         if(current_block->magic_value==FREE){
             return current_block;
         }

@@ -2,6 +2,7 @@
 #include "../util/util.h"
 #include "../util/stringmanipulation.h"
 #include "../snake/main.h"
+#include "../2048/main2048.h"
 
 char* prepstring(char* str){
     int len=0;
@@ -117,8 +118,16 @@ void execute_term_command(command_parsed_t* command){
         echolor(command->args[0],string_to_uint8(command->args[1]),string_to_uint8(command->args[2]));
     }else if(strcmp(command->commande,"clear")==0){
         WText_clear(get_term_window());
+        enable_cursor();
     }else if(strcmp(command->commande,"snake")==0){
         Snake_init();
+    }else if(strcmp(command->commande,"game2048")==0){
+        init_2048();
+    }else if(strcmp(command->commande,"palette")==0){
+        for(uint8_t i=0;i<254;i++){
+            
+            M13h_draw_rectangle((i*20)%VGA_WIDTH,((i*20)/VGA_WIDTH)*20,20,20,i);
+        }  
     }
 }
 
