@@ -22,6 +22,12 @@ uint32_t seed = 0;
 char *historique[200];
 int pointeur_d_historique = 0;
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  trigger_interrupt
+ *  Description: doesn't work 
+ * =====================================================================================
+ */
 void trigger_interrupt(uint8_t interrupt_number) {
     __asm__ (
         "movb %0, %%al\n\t"  // Déplacer le numéro d'interruption dans le registre AL
@@ -32,6 +38,12 @@ void trigger_interrupt(uint8_t interrupt_number) {
     );
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  display_sector
+ *  Description:print a disk sector 
+ * =====================================================================================
+ */
 void display_sector(uint16_t* sector_data, size_t length) {
     char buffer[6];  // Buffer pour contenir la version en chaîne de chaque nombre (max 7 caractères + '\0')
     for (size_t i = 0; i < length; i++) {

@@ -68,7 +68,7 @@ void spawn_bonus(){
     }
     if(found){
         M13h_put_color_bitmap((index%SNAKE_WIDTH)*16,4+(index/SNAKE_WIDTH)*16,16,16,get_sprite(BONUS_CASE)->color);
-        cases_status[index].sprite=EMPTY_CASE;
+        cases_status[index].sprite=BONUS_CASE;
         cases_status[index].rotation=0;
     }
 
@@ -90,9 +90,14 @@ void Snake_end(){
     enable_cursor();
     Term_ret(0, buf);
 }
-
+uint8_t speed=10;
+void update_speed(){
+  if(snake_size%7==0&&speed>=3){
+    speed--;
+  }
+}
 void clback(uint32_t tick){
-    if(tick%10==0){
+    if(tick%speed==0){
         if(game_over){
             return;
         }
@@ -138,6 +143,7 @@ void clback(uint32_t tick){
         if(cases_status[y_pos*SNAKE_WIDTH+x_pos].sprite==BONUS_CASE){
             //print_string("bonus");*
             snake_size++;
+            update_speed();
         }else if(cases_status[y_pos*SNAKE_WIDTH+x_pos].sprite==SNAKE_HEAD || cases_status[y_pos*SNAKE_WIDTH+x_pos].sprite==SNAKE_COUDE || cases_status[y_pos*SNAKE_WIDTH+x_pos].sprite==SNAKE_DROIT){
             Snake_end();
             game_over=true;
