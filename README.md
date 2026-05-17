@@ -45,3 +45,19 @@ Met en minuscule la chaine passée en argument
 ### video
 Change le mode d'affichage de la carte graphique de text 3h à graphic 256 color linear 13h.
 Notez que certaines commandes ne fonctionnent que dans l'un ou l'autre des modes
+### term
+cette commande permet d'ouvrir une fenêtre de terminal. ( Ne marche qu'en mode 13h )
+# terminal
+## commandes
+### echo
+affiche la chaîne de caractères passée en argument 
+### echolor
+sous la forme de: `echolor <chaine> <nombre1> <nombre2>`
+où nombre1 est la couleur de l'avant plan et nombre2 celle de l'arrière plan.
+Note: 15 sera remplacé par la couleur du terminal et 0 par le fond du terminal
+### palette 
+affiche la palette de couleur
+### snake
+lance une partie de snake ( ZQSD pour les mouvements )
+### game2048
+( en cours ) lance une partie de 2048
