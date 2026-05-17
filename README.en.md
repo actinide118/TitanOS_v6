@@ -42,3 +42,29 @@ It's in the name
 ### video
 Switch the graphic card mode from text 16 color 3h to graphic 256 color linear 13h, and print the alphanumerics characters of the system in this mode
 Note it's not possible to go back and if you want to go to the text mode you need to reboot the VM.
+
+### term
+In 13h mode open a terminal window
+
+# terminal
+## functionalities 
+### variable
+#### définition
+use the '=' operator like that: `key=value` WARNING: do not use spaces around the equal sign.
+#### use
+use the '$' prefix like that: `command $key`
+### multiple commands
+use the '&&' operator like that: `comand1 param1 && command2`. ( might not work properly if you chain more than 3 commands
+## commands
+### echo
+print string to screen
+### echolor
+use like that: `echolor <string> <N1> <N2>`
+print the string with N1 as the foreground color and N2 as the background.
+Note: 15 will be replaced by the current color of the terminal and 0 by the current background
+### palette 
+print the current VGA palette
+### snake 
+launch a snake game ( WQSD to move )
+### game2048
+( work in progress ) launch a 2048 game
