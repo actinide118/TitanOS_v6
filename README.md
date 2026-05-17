@@ -48,6 +48,14 @@ Notez que certaines commandes ne fonctionnent que dans l'un ou l'autre des modes
 ### term
 cette commande permet d'ouvrir une fenêtre de terminal. ( Ne marche qu'en mode 13h )
 # terminal
+## fonctionnalités 
+### variables
+#### définition 
+utiliser l'opérateur '=' comme ça: `clé=valeur`. ATTENTION ne pas entourer l'égal par des espaces
+#### utilisation 
+utiliser l'opérateur '$' de cette manière: `commande $clé`
+### exécution en chaîne
+utiliser l'opérateur '&&' pour enchaîner plusieurs commandes. Ex: `commande1 paramètre1 && commande2`. ( notez que cette fonctionnalité pourrait ne pas fonctionner correctement au-delà de 3 commandes )
 ## commandes
 ### echo
 affiche la chaîne de caractères passée en argument 
