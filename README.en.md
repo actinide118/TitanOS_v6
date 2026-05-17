@@ -54,7 +54,7 @@ use the '=' operator like that: `key=value` WARNING: do not use spaces around th
 #### use
 use the '$' prefix like that: `command $key`
 ### multiple commands
-use the '&&' operator like that: `comand1 param1 && command2`. ( might not work properly if you chain more than 3 commands
+use the '&&' operator like that: `comand1 param1 && command2`. ( might not work properly if you chain more than 3 commands )
 ## commands
 ### echo
 print string to screen
