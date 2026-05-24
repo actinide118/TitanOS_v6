@@ -15,6 +15,11 @@ Exécuter `make all` ou `make run`
 
 <img width="730" height="463" alt="titanOS2" src="https://github.com/user-attachments/assets/3feff538-8fbd-46b9-b58a-03676aa9b60c" />
 
+<img width="650" height="463" alt="TitanOS3" src="https://github.com/user-attachments/assets/5143b77f-da6f-4112-86a7-554e56c04d70" />
+
+<img width="650" height="463" alt="TitanOS4" src="https://github.com/user-attachments/assets/63400f24-e802-43d2-8290-4a5be2e81840" />
+
+
 # Commandes
 ### end
 Arrête le cpu mais n'éteint pas la carte graphique
