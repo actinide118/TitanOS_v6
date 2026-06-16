@@ -1,8 +1,34 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  util.c
+ *
+ *    Description:  Very messy file containg a great collection of usefuls functions for data manipulation and conversion 
+ *
+ *        Version:  1.0
+ *        Created:  27/05/2026 21:26:43
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
+
+
 #include "util.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
 
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  memory_copy
+ *  Description:  Copy raw memory from an adress to another ( be very careful when using: No protection )
+ * =====================================================================================
+ */
 void memory_copy(char *source, char *dest, int nbytes) {
     int i;
     for (i = 0; i < nbytes; i++) {
@@ -10,13 +36,13 @@ void memory_copy(char *source, char *dest, int nbytes) {
     }
 }
 
-void memory_set(u8 *dest, u8 val, u32 len) {
-    u8 *temp = (u8 *)dest;
-    for ( ; len != 0; len--) *temp++ = val;
-}
 
-/**
- * K&R implementation
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  int_to_ascii
+ *  Description:  convert a intergrer into a string ( No protection against buffer overflow ) 
+ * =====================================================================================
  */
 void int_to_ascii(int n, char str[]) {
        int i, sign;
@@ -31,6 +57,14 @@ void int_to_ascii(int n, char str[]) {
 
     reverse(str);
 }
+
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  reverse
+ *  Description:  Reverse the order of a string 
+ * =====================================================================================
+ */
 void reverse(char s[]) {
     int c, i, j;
     for (i = 0, j = strlen(s)-1; i < j; i++, j--) {
@@ -41,6 +75,12 @@ void reverse(char s[]) {
 }
 
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  hex_to_ascii
+ *  Description:  Convert a number into a string representing the number as hexadecimal 
+ * =====================================================================================
+ */
 void hex_to_ascii(int n, char str[]) {
     append(str, '0');
     append(str, 'x');
@@ -61,12 +101,26 @@ void hex_to_ascii(int n, char str[]) {
     else append(str, tmp + '0');
 }
 
-/* K&R */
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  strlen
+ *  Description:  Give th length of a string considering the null character as the end 
+ * =====================================================================================
+ */
 int strlen(char s[]) {
     int i = 0;
     while (s[i] != '\0') ++i;
     return i;
 }
+
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  backspace
+ *  Description:  Delete the last char of a string
+ * =====================================================================================
+ */
 bool backspace(char s[]) {
     int len = strlen(s);
     if (len > 0) {
@@ -76,11 +130,27 @@ bool backspace(char s[]) {
         return false;
     }
 }
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  append
+ *  Description:  Add a character at the last place of a string 
+ * =====================================================================================
+ */
 void append(char s[], char n) {
     int len = strlen(s);
     s[len] = n;
     s[len+1] = '\0';
 }
+
+
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  strcmp
+ *  Description:  Compare two strings, 0 means identical and another number tell you the space in the ASCII table between the two first mismatching characters
+ * =====================================================================================
+ */
 int strcmp(char s1[], char s2[]) {
     int i;
     for (i = 0; s1[i] == s2[i]; i++) {
@@ -89,6 +159,12 @@ int strcmp(char s1[], char s2[]) {
     return s1[i] - s2[i];
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  uint16_to_hex
+ *  Description:  Return a variable of type uint16_t as an hexadecimal representation 
+ * =====================================================================================
+ */
 void uint16_to_hex(uint16_t value, char* buffer) {
     const char* hex_digits = "0123456789ABCDEF";
     //buffer[0] = '0';
@@ -101,9 +177,16 @@ void uint16_to_hex(uint16_t value, char* buffer) {
     buffer[5] = '\0'; // Termine la chaîne de caractères
 }
 
-// Fonction pour diviser une chaîne `str` en sous-chaînes selon le séparateur `delimiter`
-// et stocker les pointeurs vers ces sous-chaînes dans `result`.
-// Retourne le nombre de sous-chaînes trouvées.
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  split
+ *  Description:   Fonction pour diviser une chaîne `str` en sous-chaînes selon le séparateur `delimiter`
+ * et stocker les pointeurs vers ces sous-chaînes dans `result`.
+ * Retourne le nombre de sous-chaînes trouvées. 
+ * =====================================================================================
+ */
+
 int split(const char* str, char delimiter, char* result[], int max_splits) {
     int count = 0;
     const char* start = str;
@@ -134,6 +217,15 @@ int split(const char* str, char delimiter, char* result[], int max_splits) {
 
     return count;
 }
+
+
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  string_to_uint32
+ *  Description:  Return apositive intergrer corresponding to the string passed in argument
+ * =====================================================================================
+ */
 uint32_t string_to_uint32(const char* str) {
     uint32_t num = 0;
 
@@ -151,6 +243,14 @@ uint32_t string_to_uint32(const char* str) {
 
     return num;
 }
+
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  uint32_to_string
+ *  Description:  Transform an uint32 into a string
+ * =====================================================================================
+ */
 void uint32_to_string(uint32_t num, char* buffer) {
     int index = 0;
     uint32_t temp = num;
@@ -180,6 +280,12 @@ void uint32_to_string(uint32_t num, char* buffer) {
     buffer[index] = '\0';  // Termine la chaîne par un caractère nul
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  uint8_to_string
+ *  Description:  Transform an uint8 into a string
+ * =====================================================================================
+ */
 void uint8_to_string(uint8_t num, char* buffer) {
     int index = 0;
     uint8_t temp = num;
@@ -208,6 +314,14 @@ void uint8_to_string(uint8_t num, char* buffer) {
 
     buffer[index] = '\0';  // Termine la chaîne par un caractère nul
 }
+
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  uint16_to_string
+ *  Description:  Transform an uint16 to a string
+ * =====================================================================================
+ */
 
 void uint16_to_string(uint16_t num, char* buffer) {
     int index = 0;
@@ -238,6 +352,14 @@ void uint16_to_string(uint16_t num, char* buffer) {
     buffer[index] = '\0';  // Termine la chaîne par un caractère nul
 }
 
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  uint16_array_to_string
+ *  Description:  Take an array of uint16 and put in the result string each byte as an ascii character
+ * =====================================================================================
+ */
+
 void uint16_array_to_string(uint16_t* array, size_t length, char* result_buffer) {
     char* current_position = result_buffer;
 
@@ -250,6 +372,13 @@ void uint16_array_to_string(uint16_t* array, size_t length, char* result_buffer)
     // Ajoute le caractère nul de fin
     *current_position = '\0';
 }
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  string_to_uint8
+ *  Description:  Return an uint8 regarding the string passed as an argument
+ * =====================================================================================
+ */
 uint8_t string_to_uint8(const char* str) {
     uint8_t num = 0;
 

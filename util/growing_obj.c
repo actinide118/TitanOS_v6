@@ -1,9 +1,35 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  growing_obj.c
+ *
+ *    Description:  This file contain functions to manage linked list with memory allocation 
+ *
+ *        Version:  1.0
+ *        Created:  27/05/2026 21:15:20
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
+
+
 #include "growing_obj.h"
 #include "../driver/memory.h"
 #include <stddef.h>
 #include "../util/util.h"
 #include "../driver/vga.h"
 
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  GObj_create
+ *  Description:  Create a linked list and return a pointer to the first element 
+ * =====================================================================================
+ */
 growing_obj_t* GObj_create(){
     growing_obj_t* obj=(growing_obj_t*)kmalloc(sizeof(growing_obj_t));
     if(obj==NULL){
@@ -15,6 +41,12 @@ growing_obj_t* GObj_create(){
     return obj;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  GObj_get
+ *  Description:  Get the value of an element in the list using its key 
+ * =====================================================================================
+ */
 void* GObj_get(growing_obj_t* obj,char* key){
     bool is_finished=false;
     growing_obj_t* curr=obj;
@@ -32,6 +64,12 @@ void* GObj_get(growing_obj_t* obj,char* key){
     return NULL;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  GObj_set
+ *  Description:  Set a key-value couple 
+ * =====================================================================================
+ */
 void GObj_set(growing_obj_t* obj,char* key,void* value){
     bool is_finished=false;
     growing_obj_t* curr=obj;
@@ -71,6 +109,12 @@ void GObj_set(growing_obj_t* obj,char* key,void* value){
     return;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  GObj_delete
+ *  Description:  Delete an element using its index 
+ * =====================================================================================
+ */
 void GObj_delete(growing_obj_t* obj,char* key){
     bool is_finished=false;
     growing_obj_t* curr=obj;
@@ -95,6 +139,12 @@ void GObj_delete(growing_obj_t* obj,char* key){
     }
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  GObj_free
+ *  Description:  Delete a linked list ( don't free the pointer of the key and value ) 
+ * =====================================================================================
+ */
 void GObj_free(growing_obj_t* obj){
     growing_obj_t* curr=obj;
     growing_obj_t* next;
@@ -105,6 +155,12 @@ void GObj_free(growing_obj_t* obj){
     }
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  GObj_delete
+ *  Description:  Delete a linked list ( free the pointer in value ) 
+ * =====================================================================================
+ */
 void GObj_clear(growing_obj_t* obj){
     growing_obj_t* curr=obj;
     growing_obj_t* next;

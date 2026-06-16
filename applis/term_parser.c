@@ -1,3 +1,20 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  term_parser.c
+ *
+ *    Description:  This file is a real mess and should not be read as the code is really hard to understand and quite buggy
+ *
+ *        Version:  1.0
+ *        Created:  16/06/2026 20:35:54
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
 #include "term_parser.h"
 #include "../util/stringmanipulation.h"
 #include "../driver/memory.h"
@@ -6,6 +23,13 @@
 #include "../util/growing_obj.h"
 #include "../util/util.h"
 
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  print_GObj
+ *  Description:  Print a list of 'key=value' corresponding to the data in the growing object holding it
+ * =====================================================================================
+ */
 void printGObj(growing_obj_t* obj){
     growing_obj_t* curr=obj;
     bool is_finished=false;
@@ -22,6 +46,12 @@ void printGObj(growing_obj_t* obj){
     }
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  GObj_to_command_parsed
+ *  Description:  Take a growing object containing each string in this part of the command and return a command_parsed structure
+ * =====================================================================================
+ */
 command_parsed_t* GObj_to_command_parsed(growing_obj_t* obj,uint8_t id){
     int len;
     command_parsed_t* command=(command_parsed_t*)kmalloc(sizeof(command_parsed_t));
@@ -60,6 +90,12 @@ command_parsed_t* GObj_to_command_parsed(growing_obj_t* obj,uint8_t id){
     return command;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  GObj_to_return_struct
+ *  Description:  Take a growing object of command_parsed and put them in a return structure
+ * =====================================================================================
+ */
 returnstruct_t* GObj_to_return_struct(growing_obj_t* obj){
     if(obj->key==NULL){
         returnstruct_t* rt=(returnstruct_t*)kmalloc(sizeof(returnstruct_t));
@@ -91,6 +127,12 @@ returnstruct_t* GObj_to_return_struct(growing_obj_t* obj){
     return cmds;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  free_command_parsed
+ *  Description:  Doesn't work 
+ * =====================================================================================
+ */
 void free_command_parsed(command_parsed_t* command_parsed ){
     //free(command_parsed->commande);
     for(uint8_t i=0;i<command_parsed->argslen;i++){
@@ -100,6 +142,12 @@ void free_command_parsed(command_parsed_t* command_parsed ){
     //free(command_parsed);
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  free_return_struct
+ *  Description:  Do nothing
+ * =====================================================================================
+ */
 void free_return_struct(returnstruct_t* parsed_cmd){
     for (uint8_t i=0;i<parsed_cmd->len;i++){
         free_command_parsed(parsed_cmd->arr[i]);
@@ -109,6 +157,12 @@ void free_return_struct(returnstruct_t* parsed_cmd){
 }
 
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  parsing_error
+ *  Description:  It take an error message and create a return struct containing a command_parsed that print the error message
+ * =====================================================================================
+ */
 returnstruct_t* parsing_error(char* str){
         command_parsed_t* err=(command_parsed_t*)kmalloc(sizeof(command_parsed_t));
         command_parsed_t** errarr=(command_parsed_t**)kmalloc(sizeof(command_parsed_t*));
@@ -127,6 +181,13 @@ returnstruct_t* parsing_error(char* str){
         return arr;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  parse_command_line
+ *  Description:  Split the user input into block then into smaller one and create a return_struct
+ *  THIS FUNCTION NEED A REWORK
+ * =====================================================================================
+ */
 returnstruct_t* parse_command_line(char* command_line){
     if(command_line[0]=='\0'){
         returnstruct_t* arr=(returnstruct_t*)kmalloc(sizeof(returnstruct_t));

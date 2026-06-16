@@ -1,3 +1,10 @@
+;=================================
+; file: boot2.asm
+; Description: The code is loaded in memory by the BIOS. It fetch the rest of the kernel using BIOS interruptions
+;
+; Author: Titouan(actinide118)
+;=================================
+
 [BITS 16]
 [ORG 0x7C00]   ; Adresse où le BIOS charge le bootloader
 

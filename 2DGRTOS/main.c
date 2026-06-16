@@ -1,3 +1,20 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  main.c
+ *
+ *    Description:  File that contain functions to manage multiple two dimensional object drew with character in VGA 3h mode
+ *
+ *        Version:  1.0
+ *        Created:  16/06/2026 21:22:56
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
 #include "main.h"
 #include "../driver/vga.h"
 
@@ -45,18 +62,39 @@ struct sprites gun_car = {
 int global_x= 0;
 int global_y = 6;
 
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  item_renderer
+ *  Description:  Take an pixel array struct and put it on screen using the x and y movement
+ * =====================================================================================
+ */
 void item_renderer(struct pixel_array pxs,int x, int y){
     for (int i=0; i<pxs.size; i++){
         struct pixel p = pxs.pixels[i];
         M3h_set_char_at_video_memory(p.ch,((y+p.relative_y)*80+(x+p.relative_x))*2);
     }
 }
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  item_renderer_color
+ *  Description:  Same as item renderer put the components are of a special color
+ * =====================================================================================
+ */
 void item_renderer_color(struct pixel_array pxs,int x, int y,int color){
     for (int i=0; i<pxs.size; i++){
         struct pixel p = pxs.pixels[i];
         M3h_set_char_colr_at_video_memory(p.ch,((y+p.relative_y)*80+(x+p.relative_x))*2,color);
     }
 }
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  renderer
+ *  Description:  Render each object using the dedicated function(s)
+ * =====================================================================================
+ */
 void renderer(){
     item_renderer(gun_car.sprite[1],10,5);
     item_renderer(gun_car.sprite[0],0,5);

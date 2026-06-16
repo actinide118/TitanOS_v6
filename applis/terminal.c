@@ -1,3 +1,20 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  terminal.c
+ *
+ *    Description:  File containing all the functions that control the behavior of the terminal
+ *
+ *        Version:  1.0
+ *        Created:  16/06/2026 21:06:44
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
 #include "terminal.h"
 #include "terminal_executor.h"
 #include "term_parser.h"
@@ -14,7 +31,7 @@ growing_obj_t* user_variables;
 
 text_window_t* graphic_container;
 char *current_command_line;
-
+//Functions that allow global access to some terminal variable
 growing_obj_t* get_str_buf(){
     return strbuf;
 }
@@ -31,6 +48,12 @@ text_window_t* get_term_window(){
     return graphic_container;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  callback
+ *  Description:  function that is put as the handler of a timer interrupt and manage cursor blinking
+ * =====================================================================================
+ */
 void callback(uint32_t nb){
     if(!can_change_indicator){
         return;
@@ -47,6 +70,12 @@ void callback(uint32_t nb){
     }
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  disable_cursor
+ *  Description:  Erase if it's present the cursor and forbid the callback function to print it again
+ * =====================================================================================
+ */
 void disable_cursor(void){
     if(indicator_on){
         WText_erase_last_char(graphic_container);
@@ -55,6 +84,13 @@ void disable_cursor(void){
     can_change_indicator=false;
     disabled=true;
 }
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  enable_cursor
+ *  Description:  Reallow and print the cursor
+ * =====================================================================================
+ */
 void enable_cursor(void){
     can_change_indicator=true;
     disabled=false;
@@ -64,6 +100,12 @@ void enable_cursor(void){
     }
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  keypresscallback
+ *  Description:  Function put as the keyboard interrupt handler that catch the user input and manage the execution flow
+ * =====================================================================================
+ */
 void keypresscallback(struct keymap ch, uint8_t flag){
     //can_change_indicator=false;
     if(indicator_on){
@@ -127,14 +169,32 @@ void keypresscallback(struct keymap ch, uint8_t flag){
     //can_change_indicator=true;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  Get_user_defined_variable
+ *  Description:  Return a pointer to a string that match the input key
+ * =====================================================================================
+ */
 char* Get_user_defined_variable(char* key){
     return (char*)GObj_get(user_variables,key);
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  Set_user_defined_variable
+ *  Description:  Add a key,value couple in the terminal variable list
+ * =====================================================================================
+ */
 void Set_user_defined_variable(char* key,char* value){
     GObj_set(user_variables,key,value);
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  Term_init
+ *  Description:  Init all the variable and the display the terminal need
+ * =====================================================================================
+ */
 bool Term_init(char *welcome_message){
     if(!Is_13h()){
         return false;
@@ -154,6 +214,12 @@ bool Term_init(char *welcome_message){
     return true;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  Term_ret
+ *  Description:  Function that should be called when a program has altered the display of the terminal
+ * =====================================================================================
+ */
 void Term_ret(uint8_t code, char* message){
     WText_clear(graphic_container);
     WText_printstring(graphic_container,message);

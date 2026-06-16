@@ -1,3 +1,20 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  2048sprites.c
+ *
+ *    Description:  File containig all the methods to create the block used in the 2048
+ *
+ *        Version:  1.0
+ *        Created:  16/06/2026 21:27:29
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
 #include "2048sprites.h"
 #include "../writing/supplier.h"
 #include "../driver/memory.h"
@@ -150,6 +167,14 @@ uint8_t* downscale (uint8_t* sprite,uint8_t width,uint8_t height,uint8_t multipl
   }
   return new_sprite;
 }		/* -----  end of function downscale  ----- */
+
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  binary_bitmap_to_color_bitmap
+ *  Description:  Take two colors and a bitmap and transform it in a color bitmap. Used for function compatibility
+ * =====================================================================================
+ */
 uint8_t* binary_bitmap_to_color_bitmap(bool* bitmap, uint8_t color,uint8_t color2, uint8_t width, uint8_t height){
     uint8_t* new_sprite = kmalloc(width*height);
     for (uint8_t i = 0; i < height; i++) {
@@ -160,6 +185,12 @@ uint8_t* binary_bitmap_to_color_bitmap(bool* bitmap, uint8_t color,uint8_t color
     return new_sprite;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  init_sprite
+ *  Description:  Use higher function to generate the block of the 2048 in memory (to save disk space)
+ * =====================================================================================
+ */
 void init_sprite(){
     sprites2048 = kmalloc(11 * sizeof(game_case_t));
     uint8_t* not_upscaled_sprite = binary_bitmap_to_color_bitmap(get_character('2')->graph, 0, 63, 7, 8);
@@ -240,6 +271,12 @@ void init_sprite(){
     sprites2048[10].height=40;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  get_sprite2048
+ *  Description:  Get the block corresponding to the number. the number showed and the internal number are different and are related by this relation ns=2^ni+1
+ * =====================================================================================
+ */
 game_case_t* get_sprite2048( uint8_t nb){
     return &sprites2048[nb];
 }

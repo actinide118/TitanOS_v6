@@ -1,3 +1,20 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  ports.c
+ *
+ *    Description:  File contining methods to use the processor IO using assembly
+ *
+ *        Version:  1.0
+ *        Created:  14/06/2026 21:43:22
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
 unsigned short port_word_in (unsigned short port) {
     unsigned short result;
     __asm__("in %%dx, %%ax" : "=a" (result) : "d" (port));

@@ -1,3 +1,23 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  isr.c
+ *
+ *    Description:  File containing methods to manage the interface between the idt and the system
+ *    There is two type of interrupt the ISRs and the IRQs. The ISRs are interrupts triggered by the processor and often mean an error occured. The IRQs are called material interrupts.A device or an external functionnality may need to interrupt the execution flow of the processor to check new data or any other information. In order to do so an electrical line is hardwired between the device or part of the motherboard and specials pins of the processor, these pins are the pins of the PIC, a dedicated part of the processor. After receiving the order from the electrical line the PIC trigger an IRQ. 
+ *
+ *        Version:  1.0
+ *        Created:  15/06/2026 20:44:00
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
+
+
 #include "isr.h"
 #include "idt.h"
 #include "../driver/vga.h"
@@ -11,6 +31,13 @@ isr_t interrupt_handlers[256];
 
 /* Can't do this with a loop because we need the address
  * of the function names */
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  isr_install
+ *  Description:  Set the function handling to avoid the fact that if a non defined callback is triggered the processor will jump using unitiliased date and cause unpredictable behavior
+ * =====================================================================================
+ */
 void isr_install() {
     set_idt_gate(0, (u32)isr0);
     set_idt_gate(1, (u32)isr1);
@@ -116,6 +143,12 @@ char *exception_messages[] = {
     "Reserved"
 };
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  isr_handler
+ *  Description:  Function called when an interrupt of type ISR occur implemented in interrupt.asm
+ * =====================================================================================
+ */
 void isr_handler(registers_t *r) {
     error_occured("interrupt ");
     M3h_print_string("received interrupt: ");
@@ -128,9 +161,23 @@ void isr_handler(registers_t *r) {
     asm("iret");
 }
 
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  register_interrupt_handler
+ *  Description:  Register a pointer to a function handler that will be called when the IRQ of the given number 
+ * =====================================================================================
+ */
 void register_interrupt_handler(u8 n, isr_t handler) {
     interrupt_handlers[n] = handler;
 }
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  irq_handler
+ *  Description:  Function called when an interrupt of type IRQ occur implemented in interrupt.asm
+ * =====================================================================================
+ */
 void irq_handler(registers_t *r) {
     /* Handle the interrupt in a more modular way */
     if (interrupt_handlers[r->int_no] != 0) {
@@ -145,6 +192,12 @@ void irq_handler(registers_t *r) {
     port_byte_out(0x20, 0x20); /* leader */
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  irq_install
+ *  Description:  Function where code needing to have an interrupt mapped is executed
+ * =====================================================================================
+ */
 void irq_install() {
     /* Enable interruptions */
     asm volatile("sti");

@@ -1,3 +1,20 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  text_window.c
+ *
+ *    Description:  File containing methods to manage window exclusively containing textual elements
+ *
+ *        Version:  1.0
+ *        Created:  14/06/2026 21:06:33
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
 #include "text_window.h"
 #include "../writing/supplier.h"
 #include "../util/util.h"
@@ -5,6 +22,12 @@
 
 uint8_t last_char_width=0;
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  WText_create_window
+ *  Description:  Using the parameters, create a textual window and return a struct text_window freshly allocated
+ * =====================================================================================
+ */
 text_window_t* WText_create_window(uint16_t usable_height, uint16_t usable_width, char*title,uint8_t color_border,uint8_t color_title, uint8_t color_intern, uint8_t color_foreground){
     text_window_t* t_window=(text_window_t*)kmalloc(sizeof(text_window_t));
     struct window* i_window=(struct window*)kmalloc(sizeof(struct window));
@@ -22,6 +45,12 @@ text_window_t* WText_create_window(uint16_t usable_height, uint16_t usable_width
     return t_window;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  Intern_WText_putchar
+ *  Description:  Put a char in a textual window at the window curr_col and curr_row and update this ones by checking for end of line 
+ * =====================================================================================
+ */
 bool Intern_WText_putchar(text_window_t *window,char ch){
     if(ch=='\n'){
         if(window->curr_row+20>window->fenetre->usable_height){
@@ -51,6 +80,12 @@ bool Intern_WText_putchar(text_window_t *window,char ch){
     return haschangedline;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  WText_printstring
+ *  Description:  Print a string using the Intern_WText_putchar function and return the number of line changes
+ * =====================================================================================
+ */
 uint8_t WText_printstring(text_window_t *window,char* string){
     uint8_t chgmt=0;
     while(*string){
@@ -62,6 +97,12 @@ uint8_t WText_printstring(text_window_t *window,char* string){
     return chgmt;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  WText_erase_last_line
+ *  Description:  Erase the line where the last character was put
+ * =====================================================================================
+ */
 void WText_erase_last_line(text_window_t *window){
     if(window->curr_col==0&&window->curr_row>0){
         window->curr_row-=10;
@@ -71,6 +112,12 @@ void WText_erase_last_line(text_window_t *window){
     last_char_width=0;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  WText_erase_last_char
+ *  Description:  Erase last char by using the last_char_width attribute
+ * =====================================================================================
+ */
 void WText_erase_last_char(text_window_t* window){
     M13h_draw_rectangle(window->fenetre->usable_left+window->curr_col-last_char_width,window->fenetre->usable_top+window->curr_row,last_char_width,10,window->fenetre->color_intern);
     window->curr_col-=last_char_width;
@@ -116,6 +163,12 @@ uint8_t WText_printstring_color(text_window_t *window,char* string,uint8_t foreg
     return chgmt;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  WText_clear
+ *  Description:  Clear the inside of the window and ensure that border are on screen
+ * =====================================================================================
+ */
 void WText_clear(text_window_t* window){
     M13h_draw_rectangle(window->fenetre->usable_left,window->fenetre->usable_top,window->fenetre->usable_width,window->fenetre->usable_height,window->fenetre->color_intern);
     M13h_draw_rectangle(window->fenetre->left,window->fenetre->top,window->fenetre->width,10,window->fenetre->color_border);

@@ -1,3 +1,22 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  supplier.c
+ *
+ *    Description:  This is the file that supplies the graphical function with letters' bitmap 
+ *
+ *        Version:  1.0
+ *        Created:  27/05/2026 21:10:56
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
+
+
 #include "./supplier.h"
 
 struct character characters[75]={{
@@ -1143,6 +1162,12 @@ struct character default_out={
         .graph_width=8
     };
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  get_character
+ *  Description:  Return the pointer to the struct character corresponding to the char passed in input ( not all ASCII table covered ) or the empty set sign
+ * =====================================================================================
+ */
 character* get_character(char input){
     //character* characters = (character*) 0x5000;
     for(int i=0; i<75; i++){

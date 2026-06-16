@@ -1,3 +1,20 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  keyboard2.c
+ *
+ *    Description:  File containing how TitanOS handle keyboard interrupts using a PS/2 keyboard
+ *
+ *        Version:  1.0
+ *        Created:  14/06/2026 21:18:02
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
 #include "keyboard2.h"
 #include "../util/ascii.h"
 #include <stdint.h>
@@ -23,6 +40,12 @@ static int ctrl_mode = 0;
 static int capslock_mode = 0;
 static int numlock_mode = 0;
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  keyboard_interrupt_l2
+ *  Description:  Second layer it interpret the code to find which key was pressed using the keymap defined in keymap.my.c in the root directory and emit the keyboard or keyboard_up event
+ * =====================================================================================
+ */
 static void keyboard_interrupt_l2( uint8_t code )
 {
 	int direction;
@@ -73,6 +96,12 @@ static void keyboard_interrupt_l2( uint8_t code )
 }
 static int expect_extra = 0;
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  keyboard_interrupt
+ *  Description:  First layer of the interrupt process. It is the function called by the interrupt table, it read the input and call the second layer
+ * =====================================================================================
+ */
 static void keyboard_interrupt(registers_t *regs)
 {
 	uint8_t code = port_byte_in(KEYBOARD_PORT);
@@ -110,6 +139,12 @@ static void keyboard_interrupt(registers_t *regs)
 }
 static char key_buffer[256];
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  keycallback
+ *  Description:  Default handler of the keyboard event it add the character to the command line of the basic terminal (the first when you boot)
+ * =====================================================================================
+ */
 void keycallback(struct keymap ch, uint8_t flag){
     if (ch.normal == ASCII_BS) {
         if (backspace(key_buffer)) {
@@ -146,9 +181,23 @@ void keycallback(struct keymap ch, uint8_t flag){
         print_string(str);
     }
 }
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  keyup
+ *  Description:  Dummy handler for the keyboard_up event
+ * =====================================================================================
+ */
 void keyup(struct keymap km, uint8_t arg2){
 
 }
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  reset
+ *  Description:  Reset the keyboard's function handler and clear the screen to show the basic terminal
+ * =====================================================================================
+ */
 void reset(){
 	set_callback_keyboard_up(keyup);
 	set_callback_keyboard(keycallback);
@@ -166,6 +215,12 @@ void reset(){
 	M3h_print_string("\n> ");
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  keyboard_init
+ *  Description:  It set up the handlers and register the interrupt in the interrupt table
+ * =====================================================================================
+ */
 void keyboard_init(){
 	set_callback_keyboard_up(keyup);
 	set_callback_keyboard(keycallback);

@@ -1,3 +1,22 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  keymap.my.c
+ *
+ *    Description:  file containig the relation between a key stroke and a letter 
+ *
+ *        Version:  1.0
+ *        Created:  27/05/2026 20:53:44
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
+
+
 {KEY_INVALID, KEY_INVALID, KEY_INVALID, 0},
 {ASCII_ESC, ASCII_ESC, ASCII_NUL, 0},
 {'1','&','1',0},

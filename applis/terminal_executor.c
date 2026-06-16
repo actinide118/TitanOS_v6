@@ -1,9 +1,32 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  terminal_executor.c
+ *
+ *    Description:  File containing code to execute command by command a terminal line parsed in the term_parser.c
+ *
+ *        Version:  1.0
+ *        Created:  16/06/2026 20:24:38
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
 #include "terminal_executor.h"
 #include "../util/util.h"
 #include "../util/stringmanipulation.h"
 #include "../snake/main.h"
 #include "../2048/main2048.h"
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  prepstring
+ *  Description:  Function that check if the string start by $ and get the value of the variable or escape characters like \n and \r
+ * =====================================================================================
+ */
 char* prepstring(char* str){
     int len=0;
     char* cp=str;
@@ -66,6 +89,13 @@ char* prepstring(char* str){
     return cp;
 }
 
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  echolor
+ *  Description:  Print a string of color if the foreground value is set to 15 it's replaced by the current terminal foreground color and if the background color is set to 0 it's replaced by the current terminal background color
+ * =====================================================================================
+ */
 void echolor(char *str,uint8_t foreground,uint8_t background){
     uint8_t iforeground;
     uint8_t ibackground;
@@ -82,6 +112,12 @@ void echolor(char *str,uint8_t foreground,uint8_t background){
     *get_line_printed()+=WText_printstring_color(get_term_window(),prepstring(str),iforeground,ibackground);
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  def_variable
+ *  Description:  Split the line and isolate id and value components in order to add them to the terminal variable list
+ * =====================================================================================
+ */
 void def_variable(char* str,int indexspace){
     char* id = kmalloc((indexspace+1)*sizeof(char));
     char* value = kmalloc((strlen(str)-indexspace+1)*sizeof(char));
@@ -90,6 +126,13 @@ void def_variable(char* str,int indexspace){
     Set_user_defined_variable(id,value);
 }
 
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  execute_term_command
+ *  Description:  Receive a command_parsed structure and execute it 
+ * =====================================================================================
+ */
 void execute_term_command(command_parsed_t* command){
     //WText_printstring_color(get_term_window(),command->commande,4,0);
     int indefofspace=indexOf(command->commande,'=');

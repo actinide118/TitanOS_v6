@@ -1,3 +1,20 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  stringmanipulation.c
+ *
+ *    Description:  File containing functions to manipulate strings 
+ *
+ *        Version:  1.0
+ *        Created:  27/05/2026 21:22:21
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
 #include "stringmanipulation.h"
 #include <stdint.h>
 
@@ -27,12 +44,24 @@ bool is_alphabetic_char(char ch){
     }
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  slice
+ *  Description:  Copy a part of a string in another string ( offer no protection against buffer overflow ) 
+ * =====================================================================================
+ */
 void slice(char *strmere,char *strfille,uint32_t index,uint32_t len){
     for(uint32_t i=0;i<len;i++){
         strfille[i]=strmere[index+i];
     }
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  indexOf
+ *  Description:  Return the first occurence of a given char in a string or -1 if it can't find any 
+ * =====================================================================================
+ */
 int indexOf(char* str,char ch){
     int index=0;
     while (*str)

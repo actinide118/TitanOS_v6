@@ -1,3 +1,20 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  main.c
+ *
+ *    Description:  File containg the main logic of the snake game
+ *
+ *        Version:  1.0
+ *        Created:  28/05/2026 17:23:43
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
 #include "main.h"
 #include "../driver/memory.h"
 #include "../util/alea.h"
@@ -34,6 +51,12 @@ case_descriptor_t* next_case;
 uint16_t* snake_pieces;
 uint16_t snake_size=1;
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  spawn_bonus
+ *  Description:  Spawn a bonus at a random empty case using the kernel PNRG
+ * =====================================================================================
+ */
 void spawn_bonus(){
     rnd = random(get_seed());
     set_seed(rnd);
@@ -74,6 +97,12 @@ void spawn_bonus(){
 
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  Snake_end
+ *  Description:  Function containing the routine to terminate properly a snake game and return to the command line
+ * =====================================================================================
+ */
 void Snake_end(){
     free(cases_status);
     free(snake_pieces);
@@ -91,11 +120,27 @@ void Snake_end(){
     Term_ret(0, buf);
 }
 uint8_t speed=10;
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  update_speed
+ *  Description:  Check the snake size and adapt the speed so the difficulty 
+ * =====================================================================================
+ */
 void update_speed(){
   if(snake_size%7==0&&speed>=3){
     speed--;
   }
 }
+
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  clback
+ *  Description:  Function that's put as the callback of the clock interruption using the events function of the kernel.
+ *  It check regarding the speed if it could do something, and if it need make the snake go in the direction and check for endgame
+ * =====================================================================================
+ */
 void clback(uint32_t tick){
     if(tick%speed==0){
         if(game_over){
@@ -174,6 +219,12 @@ void clback(uint32_t tick){
     crindex=crindex%16;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  key_call
+ *  Description:  Function that catch input like clback and update the current next direction using ZQSD key
+ * =====================================================================================
+ */
 void key_call(struct keymap km, uint8_t arg2){
     if(km.normal=='z' || km.normal==KEY_UP){
         key_direction=0;
@@ -187,6 +238,12 @@ void key_call(struct keymap km, uint8_t arg2){
     }
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  init_board
+ *  Description:  Put the board and spawn the first bonuses
+ * =====================================================================================
+ */
 void init_board(){
     game_case_t* bckg = get_sprite(EMPTY_CASE);
     game_case_t* bn = get_sprite(BONUS_CASE);
@@ -207,6 +264,12 @@ void init_board(){
     }
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  Snake_init
+ *  Description:  It prepare the screen for the game, allow memory for what's needed and setup the callbacks functions
+ * =====================================================================================
+ */
 void Snake_init(){
     disable_cursor();
     clear_screen(0);

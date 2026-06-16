@@ -1,7 +1,31 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  window.c
+ *
+ *    Description:  File containing methods to create and manage windows
+ *
+ *        Version:  1.0
+ *        Created:  14/06/2026 20:57:55
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
+
 #include "window.h"
 #include "../driver/vga.h"
 
-bool create_window(struct window* fenetre){// The six first fields of the struct are overide by the function who create the window based on the other field
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  create_window
+ *  Description:  Create a window using a struct window object and update this one. The nececessary fields are usable_width, usable_height, color_border and color_intern
+ * =====================================================================================
+ */
+bool create_window(struct window* fenetre){// The six first fields of the struct are overwritten by the function who create the window based on the other field
     if(fenetre->usable_width+8> VGA_WIDTH||fenetre->usable_height+14>VGA_HEIGHT){
         return false;
     }
@@ -34,10 +58,22 @@ bool create_window(struct window* fenetre){// The six first fields of the struct
     return true;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  del_window
+ *  Description:  put a rectangle the color of the background where the window was but don't update the struct window
+ * =====================================================================================
+ */
 void del_window(struct window* fenetre){
     M13h_draw_rectangle(fenetre->top,fenetre->left,fenetre->width,fenetre->height,get_background());
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  W_scroll
+ *  Description:  remove ln lines from the top, move the others to the top and add ln lines of the color_intern properties
+ * =====================================================================================
+ */
 void W_scroll(struct window* fenetre,int ln){
     for(int i=0;i<=fenetre->usable_height-ln;i++){
         for(int j=0;j<fenetre->usable_width;j++){
@@ -48,6 +84,12 @@ void W_scroll(struct window* fenetre,int ln){
     M13h_draw_rectangle(fenetre->usable_left,fenetre->usable_top+fenetre->usable_height-ln,fenetre->usable_width,ln,(int)fenetre->color_intern);
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  W_clear
+ *  Description:  Clear the interior of a window but not the border not like del_window
+ * =====================================================================================
+ */
 void W_clear(struct window* fenetre){
    M13h_draw_rectangle(fenetre->usable_left,fenetre->usable_top,fenetre->usable_width,fenetre->usable_height+2,fenetre->color_intern); 
 }

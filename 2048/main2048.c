@@ -54,7 +54,7 @@ put_case (uint8_t place,uint8_t value )
 /* 
  * ===  FUNCTION  ======================================================================
  *         Name:  returntoterminal
- *  Description:  
+ *  Description:  It prepare a string to show the score as a return string to the terminal
  * =====================================================================================
  */
 	void
@@ -414,6 +414,12 @@ void spawn_case(){
 
 
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  init_2048
+ *  Description:  Prepare memory, display, and the first block
+ * =====================================================================================
+ */
 void init_2048(void){
 	init_2048_board();
 	board=kmalloc(16);

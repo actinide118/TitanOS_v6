@@ -1,3 +1,20 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  ata.c
+ *
+ *    Description:  File made by AI to read the disk doesn't work all the time, actually not usefull
+ *
+ *        Version:  1.0
+ *        Created:  14/06/2026 21:17:03
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
 #include "./ports.h"
 #include <stdint.h>
 

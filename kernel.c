@@ -1,3 +1,22 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  kernel.c
+ *
+ *    Description:  File containing the startup process of TitanOS 
+ *
+ *        Version:  1.0
+ *        Created:  27/05/2026 20:55:00
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
+
+
 #include "driver/vga.h"
 #include <stdint.h>
 #include "cpu/isr.h"
@@ -52,15 +71,36 @@ void display_sector(uint16_t* sector_data, size_t length) {
     }
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  get_seed
+ *  Description:  Return the current kernel value of the PRNG value 
+ * =====================================================================================
+ */
 uint32_t get_seed(){
     if(seed == 0){
-            seed = get_tick();
+            seed = get_tick();//Initialating using the clock ( Initialized during first call not at startup )
     }
     return seed;
 }
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  set_seed
+ *  Description:  Update the value of the kernel PRNG number 
+ * =====================================================================================
+ */
 void set_seed(uint32_t value){
     seed=value;
 }
+
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  start_kernel
+ *  Description:  Assembly jump here it setup interruption and display the welcome screen 
+ * =====================================================================================
+ */
 
 void start_kernel (){
     isr_install();
@@ -75,6 +115,15 @@ void start_kernel (){
     M3h_print_string("(\\  /)\n \\\\//\n /..\\\n \\__/ ");
     M3h_print_string("\n> ");
 }
+
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  execute_command
+ *  Description:  Default function when it comes to command executing.
+ *  First CMD when you boot
+ * =====================================================================================
+ */
 bool execute_command(char* string[]){
     historique[pointeur_d_historique]=*string;
     pointeur_d_historique++;

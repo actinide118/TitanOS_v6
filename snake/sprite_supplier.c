@@ -1,3 +1,20 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  sprite_supplier.c
+ *
+ *    Description:  File containing the 16*16 bitmap for each situation of the Snake_game
+ *
+ *        Version:  1.0
+ *        Created:  28/05/2026 17:19:56
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
 #include "sprite_supplier.h"
 
 
@@ -131,6 +148,12 @@ game_case_t sprites[5]={
     }
 };
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  get_sprite
+ *  Description:  Return a pointer to the bitmap corresponding to the id passed in parameter (ids specified in sprite_supplier.h)
+ * =====================================================================================
+ */
 game_case_t* get_sprite( uint8_t nb){
     return &sprites[nb];
 }

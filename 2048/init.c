@@ -1,8 +1,31 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  init.c
+ *
+ *    Description:  File that init the board
+ *
+ *        Version:  1.0
+ *        Created:  16/06/2026 21:33:08
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
 #include "init.h"
 #include "../driver/vga.h"
 #include "../applis/terminal.h"
 #include "2048sprites.h"
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  init_2048_board
+ *  Description:  Prepare the screen to display block by creating borders and empty cases
+ * =====================================================================================
+ */
 void init_2048_board(void){
     disable_cursor();
     clear_screen(0);

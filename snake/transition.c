@@ -1,8 +1,35 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  transition.c
+ *
+ *    Description:  File containing functions for animations 
+ *    	Actually half of the function are not in use due to changes in how snake works
+ *
+ *        Version:  1.0
+ *        Created:  28/05/2026 17:08:55
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Titouan (actinide118), 
+ *   Organization:  
+ *
+ * =====================================================================================
+ */
+
+
 #include "transition.h"
 #include "../driver/vga.h"
 #include "../driver/memory.h"
 #include "../util/util.h"
 
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  fonction_line_by_line
+ *  Description:  Draw a line of a bitmap regarding a few parameter
+ * =====================================================================================
+ */
 void fonction_line_by_line(game_case_t* new_case,uint8_t direction,uint8_t step,uint8_t x,uint8_t y){
     if(direction > 3){
         return;
@@ -43,6 +70,12 @@ void fonction_line_by_line(game_case_t* new_case,uint8_t direction,uint8_t step,
     }
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  draw_line
+ *  Description:  Internal use by fonction_line_by_line
+ * =====================================================================================
+ */
 void draw_line(game_case_t* new_case,uint8_t x, uint8_t y, bool is_horizontal,uint32_t index_start){
     if(is_horizontal){
         for(uint8_t i=0;i<new_case->width;i++){
@@ -57,6 +90,12 @@ void draw_line(game_case_t* new_case,uint8_t x, uint8_t y, bool is_horizontal,ui
     }
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  fonction_transition
+ *  Description:  Transition from a bitmap to another with a slide effect
+ * =====================================================================================
+ */
 void fonction_transition(game_case_t* new_case,uint8_t direction,uint8_t step,uint8_t x,uint8_t y){
     if(direction > 3){
         return;
@@ -116,6 +155,12 @@ void set_bit(uint8_t* tab,uint32_t x, uint32_t y ,uint8_t width,uint8_t value){
 
 uint32_t test_index=0;
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  rotate_bitmap
+ *  Description:  Turn a bitmap by 90° clockwise
+ * =====================================================================================
+ */
 void rotate_bitmap(game_case_t* mere,game_case_t* fille){
     fille->width=mere->height;
     fille->height=mere->width;
@@ -129,6 +174,12 @@ void rotate_bitmap(game_case_t* mere,game_case_t* fille){
     
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  duplicate_bitmap
+ *  Description:  Copy a bitmap to another bitmap
+ * =====================================================================================
+ */
 game_case_t* duplicate_bitmap(game_case_t* mere){
     game_case_t* fille=(game_case_t*)kmalloc(sizeof(game_case_t));
     fille->color=(uint8_t*)kmalloc(mere->width*mere->height*sizeof(uint8_t));
@@ -140,6 +191,12 @@ game_case_t* duplicate_bitmap(game_case_t* mere){
     return fille;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  rotate_bitmap_nb
+ *  Description:  Rotate a bitmap by n*90° clockwise
+ * =====================================================================================
+ */
 game_case_t* rotate_bitmap_nb(game_case_t* mere,uint8_t nb){
     if(nb==0){
         return mere;
@@ -163,6 +220,12 @@ game_case_t* rotate_bitmap_nb(game_case_t* mere,uint8_t nb){
     return fille;
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  get_needed_rotation
+ *  Description:  Return which rotation of the SNAKE_COUDE piece is needed to join two diferents directions
+ * =====================================================================================
+ */
 uint8_t get_needed_rotation(uint8_t from,uint8_t to){
     if(to%2==from%2){
         return 0;
