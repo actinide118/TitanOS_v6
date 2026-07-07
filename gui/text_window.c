@@ -74,7 +74,7 @@ bool Intern_WText_putchar(text_window_t *window,char ch){
         }
         haschangedline=true;
     }
-    M13h_put_binary_bitmap(window->fenetre->usable_left+window->curr_col,window->fenetre->usable_top+window->curr_row,graphic_char->graph_width,10,window->fenetre->color_foreground,window->fenetre->color_intern,graphic_char->graph);
+    M13h_put_binary_in_uint8_bitmap(window->fenetre->usable_left+window->curr_col,window->fenetre->usable_top+window->curr_row,graphic_char->graph_width,10,window->fenetre->color_foreground,window->fenetre->color_intern,graphic_char->graph);
     window->curr_col+=graphic_char->graph_width;
     last_char_width=graphic_char->graph_width;
     return haschangedline;
@@ -146,7 +146,7 @@ bool Intern_WText_putchar_color(text_window_t *window,char ch,uint8_t foreground
         }
         haschangedline=true;
     }
-    M13h_put_binary_bitmap(window->fenetre->usable_left+window->curr_col,window->fenetre->usable_top+window->curr_row,graphic_char->graph_width,10,foreground,background,graphic_char->graph);
+    M13h_put_binary_in_uint8_bitmap(window->fenetre->usable_left+window->curr_col,window->fenetre->usable_top+window->curr_row,graphic_char->graph_width,10,foreground,background,graphic_char->graph);
     window->curr_col+=graphic_char->graph_width;
     last_char_width=graphic_char->graph_width;
     return haschangedline;

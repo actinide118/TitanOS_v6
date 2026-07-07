@@ -459,6 +459,29 @@ void M13h_put_binary_bitmap(int x_pos, int y_pos,int width, int height,int color
 
 /* 
  * ===  FUNCTION  ======================================================================
+ *         Name:  M13h_put_binary_in_uint8_bitmap
+ *  Description:  Take an array of bytes and render each pixel regarding if the bit in the byte is set or not 
+ * =====================================================================================
+ */
+void M13h_put_binary_in_uint8_bitmap (int x_pos, int y_pos,int width, int height,int color1,int color2, uint8_t arr[])
+{
+  if (width > 8) {
+    return;
+  }
+  for(int i=0;i<height;i++){
+        for(int j=0; j<width; j++){
+            if((arr[i] & 1<<(width-j-1)) > 0){
+                M13h_set_pixel(x_pos+j,y_pos+i,color1);
+            }else{
+                M13h_set_pixel(x_pos+j,y_pos+i,color2);
+            }
+        }
+    }
+        return;
+}		/* -----  end of function M13_h_put_binary_in_uint8_bitmap  ----- */
+
+/* 
+ * ===  FUNCTION  ======================================================================
  *         Name:  M13h_put_color_bitmap
  *  Description:  Put an image where each pixel value is stored in an array
  * =====================================================================================
@@ -527,7 +550,7 @@ void M13h_put_char(char ascii_char){
         current_col=0;
     }
     
-    M13h_put_binary_bitmap(current_col,current_row,graphic_char->graph_width,10,foreground,background,graphic_char->graph);
+    M13h_put_binary_in_uint8_bitmap(current_col,current_row,graphic_char->graph_width,10,foreground,background,graphic_char->graph);
     current_col+=graphic_char->graph_width;
     return;
 }

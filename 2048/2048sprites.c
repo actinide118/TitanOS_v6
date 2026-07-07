@@ -24,37 +24,37 @@
 game_case_t* sprites2048;
 
 
-bool sprite16[7*8]={
-false, false, true, false, false, false, true,
-false, true, true, false, false, true, false,
-true, false, true, false, true, false, false,
-false, false, true, false, true, true, false,
-false, false, true, false, true, false, true,
-false, false, true, false, true, false, true,
-false, false, true, false, true, false, true,
-false, false, true, false, false, true, false
+uint8_t sprite16[8]={
+0b0010001,
+0b0110010,
+0b1010100,
+0b0010110,
+0b0010101,
+0b0010101,
+0b0010101,
+0b0010010,
 };
 
-bool sprite32[7*8]={
-false, true, false, false, true, true, false,
-true, false, true, false, false, false, true,
-false, false, true, false, false, true, false,
-false, true, false, false, true, false, false,
-false, false, true, false, true, false, false,
-true, false, true, false, true, false, false,
-false, true, false, false, true, true, true,
-false, false, false, false, false, false, false
+uint8_t sprite32[8]={
+0b0100110,
+0b1010001,
+0b0010010,
+0b0100100,
+0b0010100,
+0b1010100,
+0b0100111,
+0b0000000,
 };
 
-bool sprite64[7*8]={
-false, false, true, false, true, false, true,
-false, true, false, false, true, false, true,
-true, false, false, false, true, false, true,
-true, true, false, false, true, true, true,
-true, false, true, false, false, false, true,
-true, false, false, true, false, false, true,
-true, false, true, false, false, false, true,
-false, true, false, false, false, false, true
+uint8_t sprite64[8]={
+0b0010101,
+0b0100101,
+0b1000101,
+0b1100111,
+0b1010001,
+0b1001001,
+0b1010001,
+0b0100001,
 };
 
 
@@ -172,14 +172,14 @@ uint8_t* downscale (uint8_t* sprite,uint8_t width,uint8_t height,uint8_t multipl
 /* 
  * ===  FUNCTION  ======================================================================
  *         Name:  binary_bitmap_to_color_bitmap
- *  Description:  Take two colors and a bitmap and transform it in a color bitmap. Used for function compatibility
+ *  Description:  Take two colors and a uint8_t bitmap and transform it in a color bitmap. Used for function compatibility
  * =====================================================================================
  */
-uint8_t* binary_bitmap_to_color_bitmap(bool* bitmap, uint8_t color,uint8_t color2, uint8_t width, uint8_t height){
+uint8_t* binary_bitmap_to_color_bitmap(uint8_t* bitmap, uint8_t color,uint8_t color2, uint8_t width, uint8_t height){
     uint8_t* new_sprite = kmalloc(width*height);
     for (uint8_t i = 0; i < height; i++) {
         for (uint8_t j = 0; j < width; j++) {
-            new_sprite[i*width+j] = bitmap[i*width+j] ? color : color2;
+            new_sprite[i*width+j] =((bitmap[i] & 1<<(width-j-1)) > 0) ? color : color2;
         }
     }
     return new_sprite;

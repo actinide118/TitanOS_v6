@@ -20,6 +20,10 @@
 #include "../util/stringmanipulation.h"
 #include "../snake/main.h"
 #include "../2048/main2048.h"
+#include "../cpu/cpuid.h"
+#include "../driver/memory.h"
+#include "../driver/vga.h"
+#include "../writing/supplier.h"
 
 /* 
  * ===  FUNCTION  ======================================================================
@@ -171,6 +175,31 @@ void execute_term_command(command_parsed_t* command){
             
             M13h_draw_rectangle((i*20)%VGA_WIDTH,((i*20)/VGA_WIDTH)*20,20,20,i);
         }  
+    }else if(strcmp(command->commande,"cpuidtest")==0){
+        cpuid_return_t rt;
+        cpuid_execute(0,0,&rt);
+        char* buf=kmalloc(20);
+        uint32_to_string(rt.eax,buf);
+        WText_printstring(get_term_window(),"CPUID max leaf:");
+        WText_printstring(get_term_window(),buf); 
+        WText_printstring(get_term_window(),"\n"); 
+        buf=kmalloc(13);
+        get_vendor_name(buf);
+        WText_printstring(get_term_window(),"Vendor: ");
+        WText_printstring(get_term_window(),buf); 
+        WText_printstring(get_term_window(),"\n"); 
+        free(buf);
+    }else if(strcmp(command->commande,"testbitmap")==0){
+        uint8_t bitmap[7]={
+          0b00011000,
+          0b00100100,
+          0b01011010,
+          0b10100101,
+          0b01011010,
+          0b00100100,
+          0b00011000,
+        };
+        M13h_put_binary_in_uint8_bitmap(0,0,8,7,0,4,bitmap);
     }
 }
 
