@@ -103,9 +103,9 @@ void set_seed(uint32_t value){
  */
 
 void start_kernel (){
+    init_struct();
     isr_install();
     irq_install();
-    init_struct();
     char ch[] = "e";
     M3h_set_char_at_video_memory(*ch,(2*80+79)*2);
     M3h_set_cursor((1*80+3)*2);

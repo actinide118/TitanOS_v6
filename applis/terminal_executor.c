@@ -21,6 +21,7 @@
 #include "../snake/main.h"
 #include "../2048/main2048.h"
 #include "../cpu/cpuid.h"
+#include "../cpu/features.h"
 #include "../driver/memory.h"
 #include "../driver/vga.h"
 #include "../writing/supplier.h"
@@ -189,6 +190,38 @@ void execute_term_command(command_parsed_t* command){
         WText_printstring(get_term_window(),buf); 
         WText_printstring(get_term_window(),"\n"); 
         free(buf);
+        /* The following would give good result only if the processor is older than a Pentium IV and "modern" enough to support that feature
+        
+        uint32_t high;
+        uint32_t low;
+        get_serial_number(&low,&high);
+        buf=kmalloc(10);
+        WText_printstring(get_term_window(),"Serial number: ");
+        uint32_to_hex(high,buf);
+        WText_printstring(get_term_window(),buf);
+        uint32_to_hex(low,buf);
+        WText_printstring(get_term_window(),buf);
+        WText_printstring(get_term_window(),"\n");
+        free(buf);*/
+        cpuid_execute(1,0,&rt);
+        uint32_t edx;
+        uint32_t ecx;
+        buf=kmalloc(10);
+        WText_printstring(get_term_window(),"Feature flags ");
+        uint32_to_hex(edx,buf);
+        WText_printstring(get_term_window(),buf);
+        uint32_to_hex(ecx,buf);
+        WText_printstring(get_term_window(),buf);
+        WText_printstring(get_term_window(),"\n");
+        free(buf);
+        buf=kmalloc(10);
+        uint32_to_string(get_intel_field_value(INTEL_NUMBER_CLFLUSH_LINE_SIZE),buf);
+        WText_printstring(get_term_window(),"clflush line size: ");
+        WText_printstring(get_term_window(),buf);
+        WText_printstring(get_term_window(),"\n");
+        /*if ( check_feature(INTEL_PAE,VENDOR_INTEL)==true ) {
+                WText_printstring(get_term_window(),get_intel_features_name (INTEL_PAE));
+        }*/
     }else if(strcmp(command->commande,"testbitmap")==0){
         uint8_t bitmap[7]={
           0b00011000,
@@ -200,6 +233,34 @@ void execute_term_command(command_parsed_t* command){
           0b00011000,
         };
         M13h_put_binary_in_uint8_bitmap(0,0,8,7,0,4,bitmap);
+    }else if(strcmp(command->commande,"checkcpu")==0){
+      if(command->argslen!=1){
+        WText_printstring(get_term_window(),"need 1 argument \n");
+        return;
+      } 
+      uint16_t id=get_intel_index(command->args[0]);
+      if(id==((2<<16)-1)){
+        WText_printstring(get_term_window(),"Invalid name\n");
+        return;
+      }
+      if(check_feature(id,VENDOR_INTEL)){
+        WText_printstring(get_term_window(),"Feature present\n");
+
+      }else{
+        WText_printstring(get_term_window(),"Feature absent\n");
+
+      }
+
+    }else if(strcmp(command->commande,"flags")==0){
+        for(uint16_t i=0;i<64;i++){
+          if(check_feature(i,VENDOR_INTEL)){
+            WText_printstring(get_term_window(),get_intel_features_name(i));
+            WText_printstring(get_term_window()," ");
+          }
+          
+
+        }
+        WText_printstring(get_term_window(),"\n");
     }
 }
 

@@ -26,7 +26,7 @@
 #include "vga.h"
 #include "../util/util.h"
 #include "../kernel.h"
-
+#include "../driver/memory.h"
 
 
 
@@ -137,7 +137,7 @@ static void keyboard_interrupt(registers_t *regs)
 	}
 	keyboard_interrupt_l2(c);
 }
-static char key_buffer[256];
+char* key_buffer;
 
 /* 
  * ===  FUNCTION  ======================================================================
@@ -225,4 +225,5 @@ void keyboard_init(){
 	set_callback_keyboard_up(keyup);
 	set_callback_keyboard(keycallback);
 	register_interrupt_handler(IRQ1, keyboard_interrupt);
+  key_buffer=kmalloc(256);
 }

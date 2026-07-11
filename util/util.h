@@ -23,5 +23,6 @@ void uint16_array_to_string(uint16_t* array, size_t length, char* result_buffer)
 //u32 kmalloc(u32 size, int align, u32 *phys_addr);
 uint8_t string_to_uint8(const char* str);
 void uint16_to_string(uint16_t num, char* buffer);
+void uint32_to_hex(uint32_t value, char* buffer); 
 
 #endif

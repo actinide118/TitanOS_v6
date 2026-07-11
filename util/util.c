@@ -177,6 +177,25 @@ void uint16_to_hex(uint16_t value, char* buffer) {
     buffer[5] = '\0'; // Termine la chaîne de caractères
 }
 
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  uint32_to_hex
+ *  Description:  Return a variable of type uint32_t as an hexadecimal representation 
+ * =====================================================================================
+ */
+void uint32_to_hex(uint32_t value, char* buffer) {
+    const char* hex_digits = "0123456789ABCDEF";
+    //buffer[0] = '0';
+    //buffer[1] = 'x';
+    for (int i = 0; i < 8; i++) {
+        buffer[7 - i] = hex_digits[value & 0xF];
+        value >>= 4;
+    }
+    buffer[8] = ' ';  // Ajoute un espace après la représentation hexadécimale
+    buffer[9] = '\0'; // Termine la chaîne de caractères
+}
+
+
 
 /* 
  * ===  FUNCTION  ======================================================================
@@ -351,6 +370,7 @@ void uint16_to_string(uint16_t num, char* buffer) {
 
     buffer[index] = '\0';  // Termine la chaîne par un caractère nul
 }
+
 
 
 /* 

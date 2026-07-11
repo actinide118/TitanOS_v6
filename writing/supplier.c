@@ -19,7 +19,7 @@
 
 #include "./supplier.h"
 
-struct character characters[75]={{
+struct character characters[76]={{
     .letter = 'a',
     .graph =    {
 0b000000,
@@ -1144,6 +1144,21 @@ struct character characters[75]={{
 0b000000,
     },
     .graph_width=6,
+},{
+    .letter='_',
+    .graph={
+0b000000,
+0b000000,
+0b000000,
+0b000000,
+0b000000,
+0b000000,
+0b000000,
+0b011110,
+0b000000,
+0b000000,
+    },
+    .graph_width=6,
 }
 };
 
@@ -1172,7 +1187,7 @@ struct character default_out={
  */
 character* get_character(char input){
     //character* characters = (character*) 0x5000;
-    for(int i=0; i<75; i++){
+    for(int i=0; i<76; i++){
         if(characters[i].letter == input){
             return &characters[i];
         }

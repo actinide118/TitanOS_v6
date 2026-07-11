@@ -63,6 +63,6 @@ build: ./bin/boot.bin ./bin/kernel.bin
 	qemu-img resize os-image.bin +10M
 
 run: build
-	qemu-system-i386 -drive format=raw,file=os-image.bin -no-reboot
+	qemu-system-x86_64 --enable-kvm -cpu host -drive format=raw,file=os-image.bin -no-reboot
 
 all: clean run
