@@ -9,6 +9,8 @@ DRIVERS := $(patsubst ./driver/%.c, ./bin/%.o, $(wildcard ./driver/*.c))
 GUI := $(patsubst ./gui/%.c, ./bin/%.o, $(wildcard ./gui/*.c))
 SNAKE := $(patsubst ./snake/%.c, ./bin/%.o, $(wildcard ./snake/*.c))
 2048 := $(patsubst ./2048/%.c, ./bin/%.o, $(wildcard ./2048/*.c))
+VECTOR := $(patsubst ./vectorial_motor/%.c, ./bin/%.o, $(wildcard ./vectorial_motor/*.c))
+
 
 ./bin/%.o: ./cpu/%.c
 	gcc -ffreestanding -m32 -fno-pie -fno-stack-protector -c $< -o $@
@@ -35,6 +37,10 @@ SNAKE := $(patsubst ./snake/%.c, ./bin/%.o, $(wildcard ./snake/*.c))
 ./bin/%.o: ./2048/%.c
 	gcc -ffreestanding -m32 -fno-pie -fno-stack-protector -c $< -o $@
 
+./bin/%.o: ./vectorial_motor/%.c
+	gcc -ffreestanding -m32 -fno-pie -fno-stack-protector -c $< -o $@
+
+
 ./bin/Cloader.o: Cloader.asm
 	nasm Cloader.asm -f elf -o bin/Cloader.o
 
@@ -50,11 +56,26 @@ SNAKE := $(patsubst ./snake/%.c, ./bin/%.o, $(wildcard ./snake/*.c))
 ./bin/supplier.o: ./writing/supplier.c
 	gcc -ffreestanding -m32 -fno-pie -fno-stack-protector -c $< -o $@
 
-./bin/kernel.bin: ./bin/Cloader.o ./bin/interrupt.o ./bin/evt.o ./bin/2GRTOS.o ./bin/kernel.o ./bin/supplier.o $(CPU_OBJS) $(APPLIS) $(UTILS) $(DRIVERS) $(GUI) $(SNAKE) $(2048)
+./bin/kernel.bin: ./bin/Cloader.o ./bin/interrupt.o ./bin/evt.o ./bin/2GRTOS.o ./bin/kernel.o ./bin/supplier.o $(CPU_OBJS) $(APPLIS) $(UTILS) $(DRIVERS) $(GUI) $(SNAKE) $(2048) $(VECTOR)
 	ld -o $@ -Ttext 0x8000 $^ --oformat binary -m elf_i386
 
 ./bin/boot.bin:
-	nasm -f bin -o ./bin/boot.bin boot2.asm
+	nasm -f bin -o ./bin/boot.bin ./boot/boot2.asm
+
+./bin/boot3.o:
+	as -o ./bin/boot3.o ./boot/boot3.S -march=i386 --32
+
+./bin/myos.bin: ./bin/boot3.o ./bin/interrupt.o ./bin/evt.o ./bin/2GRTOS.o ./bin/kernel.o ./bin/supplier.o $(CPU_OBJS) $(APPLIS) $(UTILS) $(DRIVERS) $(GUI) $(SNAKE) $(2048) $(VECTOR)
+	ld -o $@ -T linker.ld $^ --oformat binary -m elf_i386
+
+test_multiboot: ./bin/myos.bin
+	grub-file --is-x86-multiboot $^
+
+grub_image: test_multiboot
+	mkdir -p isodir/boot/grub
+	cp ./bin/myos.bin isodir/boot/myos
+	cp ./boot/grub.cfg isodir/boot/grub/grub.cfg
+	grub-mkrescue -o ./bin/myos.iso isodir
 
 build: ./bin/boot.bin ./bin/kernel.bin
 	dd if=/dev/zero of=os-image.bin bs=512 count=2880

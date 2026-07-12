@@ -1,4 +1,3 @@
 bin
-txt.txt
-test.txt
-dump.raw
+isodir
+os-image.bin

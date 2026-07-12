@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bitmap Designer</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        color: #333;
+      }
+      header,
+      footer {
+        background: #222;
+        color: #fff;
+        padding: 1rem;
+        text-align: center;
+      }
+      main {
+        max-width: 960px;
+        margin: 1.5rem auto;
+        padding: 1rem;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .toolbar,
+      .canvas-area,
+      .properties {
+        margin-bottom: 1rem;
+      }
+      .toolbar {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .toolbar button {
+        padding: 0.75rem 1rem;
+        border: 1px solid #ccc;
+        background: #fff;
+        cursor: pointer;
+      }
+      .toolbar button:hover {
+        background: #f0f0f0;
+      }
+      .grid {
+        display: grid;
+        gap: 1rem;
+      }
+      .canvas-area {
+        border: 1px solid #ddd;
+        min-height: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .canvas-area div {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box; /* Ensure borders are included in size */
+      }
+      .canvas-area span {
+        color: #888;
+      }
+      .properties {
+        display: grid;
+        gap: 0.75rem;
+      }
+      .property-group {
+        display: grid;
+        gap: 0.35rem;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Bitmap Designer</h1>
+      <p>Create and edit bitmap-style graphics for your project.</p>
+    </header>
+    <main>
+      <section class="toolbar" aria-label="Designer tools">
+        <button type="button">New</button>
+        <button type="button">Open</button>
+        <button type="button">Save</button>
+        <button type="button">Export</button>
+      </section>
+      <section class="grid">
+        <div class="canvas-area" aria-label="Canvas area">
+          <span>Canvas preview will appear here</span>
+        </div>
+        <aside class="properties" aria-label="Design properties">
+          <div class="property-group">
+            <label for="width">Width</label>
+            <input id="width" name="width" type="number" value="32" />
+          </div>
+          <div class="property-group">
+            <label for="height">Height</label>
+            <input id="height" name="height" type="number" value="32" />
+          </div>
+          <div class="property-group">
+            <label for="color">Primary color</label>
+            <input id="color" name="color" type="color" value="#000000" />
+          </div>
+          <div class="property-group">
+            <label for="grid">Grid</label>
+            <select id="grid" name="grid">
+              <option value="on">On</option>
+              <option value="off">Off</option>
+            </select>
+          </div>
+        </aside>
+      </section>
+    </main>
+    <footer>
+      <p>Bitmap designer interface</p>
+    </footer>
+  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const canvasArea = document.querySelector(".canvas-area");
+      const widthInput = document.getElementById("width");
+      const heightInput = document.getElementById("height");
+      const colorInput = document.getElementById("color");
+      const gridToggle = document.getElementById("grid");
+      const toolbarButtons = document.querySelectorAll(".toolbar button");
+
+      let canvas = [];
+      let isDrawing = false;
+
+      function createCanvas() {
+        const width = parseInt(widthInput.value, 10);
+        const height = parseInt(heightInput.value, 10);
+
+        canvasArea.innerHTML = "";
+        canvasArea.style.display = "grid";
+        canvasArea.style.gridTemplateColumns = `repeat(${width}, 1fr)`;
+        canvasArea.style.gridTemplateRows = `repeat(${height}, 1fr)`;
+
+        canvas = [];
+        for (let y = 0; y < height; y++) {
+          const row = [];
+          for (let x = 0; x < width; x++) {
+            const pixel = document.createElement("div");
+            pixel.style.border = gridToggle.value === "on" ? "1px solid #ddd" : "none";
+            pixel.style.backgroundColor = "#fff";
+            pixel.style.aspectRatio = "1 / 1"; // Ensure square pixels
+            pixel.addEventListener("mousedown", () => {
+                console.log(`Pixel clicked at (${x}, ${y})`);
+              isDrawing = true;
+              pixel.style.backgroundColor = colorInput.value;
+            });
+            pixel.addEventListener("mouseover", () => {
+              if (isDrawing) {
+                pixel.style.backgroundColor = colorInput.value;
+              }
+            });
+            pixel.addEventListener("mouseup", () => {
+              isDrawing = false;
+            });
+            canvasArea.appendChild(pixel);
+            row.push(pixel);
+          }
+          canvas.push(row);
+        }
+      }
+
+      function clearCanvas() {
+        canvas.forEach(row => row.forEach(pixel => (pixel.style.backgroundColor = "#fff")));
+      }
+
+      function exportCanvas() {
+        const hexBitmap = canvas.map(row =>
+          row.map(pixel => {
+            const rgb = window.getComputedStyle(pixel).backgroundColor;
+            const hex = rgb
+              .match(/\d+/g)
+              .slice(0, 3)
+              .map(x => parseInt(x).toString(16).padStart(2, "0"))
+              .join("");
+            return `#${hex}`;
+          })
+        ).map(row => `${row.join(", ")}`).join(",\n");
+        console.log("Exported Bitmap (Hex):", hexBitmap);
+        alert("Bitmap exported to console as an array of hexadecimal colors.");
+      }
+
+      toolbarButtons.forEach(button => {
+        button.addEventListener("click", () => {
+          switch (button.textContent) {
+            case "New":
+              createCanvas();
+              break;
+            case "Open":
+              alert("Open functionality not implemented yet.");
+              break;
+            case "Save":
+              alert("Save functionality not implemented yet.");
+              break;
+            case "Export":
+              exportCanvas();
+              break;
+          }
+        });
+      });
+
+      widthInput.addEventListener("change", createCanvas);
+      heightInput.addEventListener("change", createCanvas);
+      gridToggle.addEventListener("change", createCanvas);
+
+      createCanvas();
+    });
+  </script>
+</html>

@@ -25,6 +25,7 @@
 #include "../driver/memory.h"
 #include "../driver/vga.h"
 #include "../writing/supplier.h"
+#include "../vectorial_motor/put_on_screen.h"
 
 /* 
  * ===  FUNCTION  ======================================================================
@@ -261,6 +262,8 @@ void execute_term_command(command_parsed_t* command){
 
         }
         WText_printstring(get_term_window(),"\n");
+    }else if(strcmp(command->commande,"dim")==0){
+        test();
     }
 }
 
