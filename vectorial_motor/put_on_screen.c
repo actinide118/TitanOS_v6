@@ -53,6 +53,9 @@ int16_t abs(int16_t nb){
  */
 
 void put_line(render_window_t* board,render_line_t* line,uint8_t color){
+  if(line->point2->x==line->point1->x&&line->point1->y==line->point2->y){
+    //print_string("p");
+  }
   int16_t vector_x=line->point2->x-line->point1->x;
   int16_t vector_y=line->point2->y-line->point1->y;
   int16_t cartesian_a=vector_y;
@@ -103,14 +106,15 @@ void put_line(render_window_t* board,render_line_t* line,uint8_t color){
       }
     }
   }else{
+    
     if(vector_y > 0){
-      for(uint16_t i=0; i<vector_y;i++){
+      for(int16_t i=0; i<vector_y;i++){
         temp.x=line->point1->x;
         temp.y=line->point1->y+i;
         put_point(board,&temp,color);
       }
     }else if(vector_y < 0){
-      for(uint16_t i=0; i<vector_y;i++){
+      for(int16_t i=0; i>vector_y;i--){
         temp.x=line->point1->x;
         temp.y=line->point1->y+i;
         put_point(board,&temp,color);
@@ -126,6 +130,13 @@ void put_line(render_window_t* board,render_line_t* line,uint8_t color){
   }
 };
 
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  put_rectangle
+ *  Description:  Show a rectangle in the defined enclosed space
+ * =====================================================================================
+ */
 void put_rectangle(render_window_t* board,render_rectangle_t* rec,uint8_t color){
   
   int16_t width=rec->point2->x-rec->point1->x;
@@ -169,6 +180,55 @@ void put_rectangle(render_window_t* board,render_rectangle_t* rec,uint8_t color)
     }
   }
 }
+void put_triangle_rectangle(render_window_t* board,render_triangle_t* triangle,uint8_t color){
+  if((((triangle->p3->y-triangle->p1->y)*(triangle->p2->x-triangle->p1->x))/(triangle->p2->y-triangle->p1->y))==(triangle->p3->x-triangle->p1->x)){
+    return;
+  }
+  //orthogonalite des axes
+  if((((triangle->p3->x-triangle->p1->x)*(triangle->p2->x-triangle->p1->x))+((triangle->p3->y-triangle->p1->y)*(triangle->p2->y-triangle->p1->y)))!=0){
+    return;
+  }
+
+  put_point(board,triangle->p1,color);
+  put_point(board,triangle->p2,color);
+  put_point(board,triangle->p3,color);
+
+  render_point_t* horizontal;
+  render_point_t* vertical;
+  if(triangle->p2->x==triangle->p1->x){
+    horizontal=triangle->p2;
+    vertical=triangle->p3;
+  }else{
+    horizontal=triangle->p3;
+    vertical=triangle->p2;
+  }
+  int16_t vector_x = vertical->x-horizontal->x;
+  int16_t vector_y = vertical->y-horizontal->y;
+
+  int16_t cartesian_a=vector_y;
+  int16_t cartesian_b=-vector_x;
+
+  int16_t x_direction = (vector_x>0)? 1:-1;
+  
+  render_point_t p1;
+  render_point_t p2;
+  render_line_t temp;
+  temp.point1=&p1;
+  temp.point2=&p2;
+
+  for(int16_t i=0;i!=vector_x+x_direction;i+=x_direction){
+    //print_string("q");
+    int16_t rendered_y=(cartesian_a*i)/-cartesian_b;
+    p1.x=triangle->p1->x+i;
+    p1.y=triangle->p1->y;
+    p2.x=triangle->p1->x+i;
+    p2.y=horizontal->y+rendered_y;
+    temp.point1=&p1;
+    temp.point2=&p2;
+    put_line(board,&temp,color);
+  }
+}
+
 
 void test(){
   render_window_t board={
@@ -222,6 +282,23 @@ void test(){
     .point1=&p1,
     .point2=&p6,
   };
+  render_point_t p7={
+    .x=60,
+    .y=45,
+  };
+  render_point_t p8={
+    .x=60,
+    .y=25,
+  };
+  render_point_t p9={
+    .x=80,
+    .y=45,
+  };
+  render_triangle_t tr={
+    .p1=&p7,
+    .p2=&p8,
+    .p3=&p9,
+  };
   
   put_point(&board,&p1,14);
   put_line(&board,&line,14);
@@ -229,6 +306,7 @@ void test(){
   put_line(&board,&line3,14);
   put_line(&board,&line4,14);
   put_rectangle(&board,&rec,4);
+  put_triangle_rectangle(&board,&tr,3);
 }
 
 

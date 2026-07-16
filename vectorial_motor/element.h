@@ -67,7 +67,13 @@ typedef struct tr{
   render_point_t* point4;
 }render_trapeze_t;
 
+#define TRIANGLE 5
 
+typedef struct t{
+  render_point_t* p1;
+  render_point_t* p2;
+  render_point_t* p3;
+}render_triangle_t;
 
 
 
